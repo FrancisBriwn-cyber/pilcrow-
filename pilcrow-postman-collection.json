@@ -1,0 +1,244 @@
+{
+  "info": {
+    "name": "Pilcrow API",
+    "description": "Complete API collection for the Pilcrow blogging platform. Set the `baseUrl` variable to your backend URL and `token` to a JWT obtained from login/register.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000", "type": "string" },
+    { "key": "token",   "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api","auth","register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"token\": \"<jwt>\",\n  \"user\": { \"id\": 4, \"name\": \"Jane Doe\", \"email\": \"jane@example.com\", \"avatar_url\": null }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.token) pm.collectionVariables.set('token', json.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"alice@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK — auto-saves token to collection variable",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"token\": \"<jwt>\",\n  \"user\": { \"id\": 1, \"name\": \"Alice Johnson\", \"email\": \"alice@example.com\", \"avatar_url\": \"...\" }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login — wrong password (401)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"alice@example.com\",\n  \"password\": \"wrongpassword\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Google OAuth — initiate (opens browser)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/auth/google", "host": ["{{baseUrl}}"], "path": ["api","auth","google"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Posts",
+      "item": [
+        {
+          "name": "Get All Posts",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/posts", "host": ["{{baseUrl}}"], "path": ["api","posts"] }
+          }
+        },
+        {
+          "name": "Search Posts",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/search?q=react",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","posts","search"],
+              "query": [{ "key": "q", "value": "react" }]
+            }
+          }
+        },
+        {
+          "name": "Search Posts — no results",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/search?q=zzznomatch",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","posts","search"],
+              "query": [{ "key": "q", "value": "zzznomatch" }]
+            }
+          }
+        },
+        {
+          "name": "Get Single Post",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/posts/1", "host": ["{{baseUrl}}"], "path": ["api","posts","1"] }
+          }
+        },
+        {
+          "name": "Get Post — not found (404)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/posts/99999", "host": ["{{baseUrl}}"], "path": ["api","posts","99999"] }
+          }
+        },
+        {
+          "name": "Create Post (auth required)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/posts", "host": ["{{baseUrl}}"], "path": ["api","posts"] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title",   "value": "My New Post",              "type": "text" },
+                { "key": "content", "value": "This is the post content.", "type": "text" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Post with Image (auth required)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/posts", "host": ["{{baseUrl}}"], "path": ["api","posts"] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title",   "value": "Post with Image", "type": "text" },
+                { "key": "content", "value": "Check out this image!", "type": "text" },
+                { "key": "media",   "type": "file", "src": "" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Edit Post (owner only)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/posts/1", "host": ["{{baseUrl}}"], "path": ["api","posts","1"] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title",   "value": "Updated Title",   "type": "text" },
+                { "key": "content", "value": "Updated content.", "type": "text" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Edit Post — forbidden (not owner, 403)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/posts/4", "host": ["{{baseUrl}}"], "path": ["api","posts","4"] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title",   "value": "Hack attempt", "type": "text" },
+                { "key": "content", "value": "...",           "type": "text" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Post (owner only)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/posts/1", "host": ["{{baseUrl}}"], "path": ["api","posts","1"] }
+          }
+        },
+        {
+          "name": "Delete Post — no token (401)",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/posts/1", "host": ["{{baseUrl}}"], "path": ["api","posts","1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/users/1", "host": ["{{baseUrl}}"], "path": ["api","users","1"] }
+          }
+        },
+        {
+          "name": "Get User — not found (404)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/users/99999", "host": ["{{baseUrl}}"], "path": ["api","users","99999"] }
+          }
+        }
+      ]
+    }
+  ]
+}
