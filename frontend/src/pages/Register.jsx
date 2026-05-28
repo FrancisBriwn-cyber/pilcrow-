@@ -36,138 +36,333 @@ export default function Register() {
   return (
     <>
       <style>{`
-        .split-page {
+        .reg-page {
           min-height: 100vh;
           display: flex;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
-        /* ── Left: form panel ── */
-        .split-form-side {
-          flex: 1;
-          min-width: 0;
+        /* ─── LEFT: Form panel ─── */
+        .reg-form-side {
+          width: 46%;
+          flex-shrink: 0;
           background: #080808;
           display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 80px 40px 48px;
+          flex-direction: column;
+          justify-content: space-between;
+          padding: 36px 52px 36px;
           position: relative;
           overflow: hidden;
         }
-        .split-form-glow {
-          position: absolute; width: 500px; height: 500px; border-radius: 50%;
+        .reg-form-side::before {
+          content: '';
+          position: absolute; width: 420px; height: 420px; border-radius: 50%;
           background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 65%);
-          top: -120px; left: 50%; transform: translateX(-50%);
-          pointer-events: none;
+          top: -140px; right: -80px; pointer-events: none;
         }
-        .split-form-inner {
+        .reg-top-nav {
+          display: flex; align-items: center; justify-content: space-between;
           position: relative; z-index: 1;
-          width: 100%; max-width: 400px;
         }
-        .split-logo {
-          display: flex; align-items: center; gap: 8px;
-          text-decoration: none; margin-bottom: 36px;
+        .reg-logo {
+          display: flex; align-items: center; gap: 8px; text-decoration: none;
         }
-        .split-logo-icon {
-          width: 32px; height: 32px; border-radius: 9px;
+        .reg-logo-icon {
+          width: 30px; height: 30px; border-radius: 8px;
           background: linear-gradient(135deg, #6366f1, #8b5cf6);
           display: flex; align-items: center; justify-content: center;
-          font-size: 15px; font-weight: 800; color: #fff;
+          font-size: 14px; font-weight: 800; color: #fff;
         }
-        .split-logo-text { font-size: 17px; font-weight: 700; color: #fff; }
-        .split-title {
-          font-size: 26px; font-weight: 800; color: #fff;
-          letter-spacing: -0.5px; margin-bottom: 6px;
+        .reg-logo-text { font-size: 15px; font-weight: 700; color: #fff; }
+        .reg-login-link {
+          font-size: 13px; color: rgba(255,255,255,0.35);
         }
-        .split-sub {
-          font-size: 14px; color: rgba(255,255,255,0.38); margin-bottom: 32px;
-        }
-        .split-footer {
-          text-align: center; font-size: 13.5px;
-          color: rgba(255,255,255,0.3); margin-top: 22px;
-        }
-        .split-footer a { color: #818cf8; }
-        .split-footer a:hover { color: #a5b4fc; }
+        .reg-login-link a { color: #818cf8; font-weight: 500; }
+        .reg-login-link a:hover { color: #a5b4fc; }
 
-        /* ── Right: image panel ── */
-        .split-image-side {
-          width: 48%;
-          flex-shrink: 0;
-          position: relative;
-          overflow: hidden;
+        .reg-form-body {
+          position: relative; z-index: 1;
+          width: 100%; max-width: 380px;
+          margin: 0 auto;
         }
-        .split-image-side img {
-          width: 100%; height: 100%; object-fit: cover;
-          display: block;
+        .reg-eyebrow {
+          display: inline-flex; align-items: center; gap: 7px;
+          background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.22);
+          border-radius: 100px; padding: 5px 13px;
+          font-size: 11.5px; font-weight: 600; color: #a5b4fc;
+          letter-spacing: 0.4px; margin-bottom: 20px;
         }
-        .split-image-overlay {
-          position: absolute; inset: 0;
-          background: linear-gradient(
-            160deg,
-            rgba(8,8,8,0.25) 0%,
-            rgba(8,8,8,0.1) 40%,
-            rgba(8,8,8,0.55) 100%
-          );
+        .reg-eyebrow-dot {
+          width: 6px; height: 6px; border-radius: 50%;
+          background: #818cf8; box-shadow: 0 0 8px rgba(129,140,248,0.7);
+          animation: pulse-dot 2s infinite;
         }
-        .split-image-brand {
-          position: absolute; bottom: 48px; left: 44px; right: 44px;
+        @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .reg-title {
+          font-size: 28px; font-weight: 800; color: #fff;
+          letter-spacing: -0.6px; line-height: 1.2; margin-bottom: 8px;
         }
-        .split-quote {
-          font-size: 22px; font-weight: 700; color: #fff;
-          letter-spacing: -0.4px; line-height: 1.35; margin-bottom: 12px;
-          text-shadow: 0 2px 20px rgba(0,0,0,0.5);
-        }
-        .split-quote-sub {
-          font-size: 13px; color: rgba(255,255,255,0.55);
-          display: flex; align-items: center; gap: 8px;
-        }
-        .split-quote-dot {
-          width: 5px; height: 5px; border-radius: 50%;
-          background: #818cf8;
+        .reg-sub {
+          font-size: 14px; color: rgba(255,255,255,0.36);
+          margin-bottom: 28px; line-height: 1.5;
         }
 
-        @media (max-width: 760px) {
-          .split-image-side { display: none; }
+        /* Field rows */
+        .reg-field { margin-bottom: 14px; }
+        .reg-label {
+          display: block; font-size: 12.5px; font-weight: 500;
+          color: rgba(255,255,255,0.5); margin-bottom: 7px; letter-spacing: 0.1px;
+        }
+        .reg-input-wrap { position: relative; }
+        .reg-input-icon {
+          position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+          color: rgba(255,255,255,0.22); pointer-events: none;
+        }
+        .reg-input {
+          width: 100%; padding: 12px 14px 12px 40px;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.09);
+          border-radius: 11px; font-size: 14px; font-family: inherit;
+          color: #fff; outline: none;
+          transition: border-color 0.2s, background 0.2s;
+        }
+        .reg-input::placeholder { color: rgba(255,255,255,0.2); }
+        .reg-input:focus {
+          border-color: rgba(99,102,241,0.6);
+          background: rgba(99,102,241,0.07);
+        }
+
+        .reg-submit {
+          width: 100%; padding: 13px;
+          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          color: #fff; border: none; cursor: pointer;
+          font-size: 14px; font-weight: 700; font-family: inherit;
+          border-radius: 11px; margin-top: 6px;
+          display: flex; align-items: center; justify-content: center; gap: 8px;
+          transition: opacity 0.15s, transform 0.1s;
+          box-shadow: 0 4px 24px rgba(99,102,241,0.35);
+        }
+        .reg-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+        .reg-submit:active { transform: scale(0.98); }
+        .reg-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .reg-divider {
+          display: flex; align-items: center; gap: 12px;
+          margin: 16px 0; color: rgba(255,255,255,0.18); font-size: 11.5px;
+          letter-spacing: 0.5px; text-transform: uppercase;
+        }
+        .reg-divider::before, .reg-divider::after {
+          content: ''; flex: 1; height: 1px;
+          background: rgba(255,255,255,0.07);
+        }
+
+        .reg-google {
+          width: 100%; padding: 12px;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 11px; cursor: pointer;
+          font-size: 13.5px; font-weight: 500; font-family: inherit;
+          color: rgba(255,255,255,0.75);
+          display: flex; align-items: center; justify-content: center; gap: 10px;
+          transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+        .reg-google:hover {
+          background: rgba(255,255,255,0.09);
+          border-color: rgba(255,255,255,0.15); color: #fff;
+        }
+
+        .reg-alert {
+          background: rgba(239,68,68,0.1); color: #f87171;
+          border: 1px solid rgba(239,68,68,0.2);
+          border-radius: 10px; padding: 11px 14px;
+          font-size: 13.5px; margin-bottom: 16px;
+        }
+
+        .reg-form-footer {
+          position: relative; z-index: 1;
+          text-align: center; font-size: 12px;
+          color: rgba(255,255,255,0.2);
+        }
+        .reg-form-footer a { color: rgba(255,255,255,0.35); }
+        .reg-form-footer a:hover { color: rgba(255,255,255,0.6); }
+
+        /* ─── RIGHT: Brand panel ─── */
+        .reg-brand-side {
+          flex: 1;
+          background: #07060f;
+          position: relative; overflow: hidden;
+          display: flex; flex-direction: column;
+          justify-content: space-between;
+          padding: 56px 60px;
+        }
+        .reg-brand-glow-1 {
+          position: absolute; width: 600px; height: 600px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(99,102,241,0.22) 0%, transparent 60%);
+          top: -120px; right: -100px; pointer-events: none;
+        }
+        .reg-brand-glow-2 {
+          position: absolute; width: 400px; height: 400px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 60%);
+          bottom: 60px; left: -80px; pointer-events: none;
+        }
+        .reg-brand-glow-3 {
+          position: absolute; width: 250px; height: 250px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(34,211,238,0.07) 0%, transparent 60%);
+          bottom: 40%; right: 20%; pointer-events: none;
+        }
+        .reg-bg-char {
+          position: absolute; font-size: 480px; font-weight: 900; line-height: 1;
+          color: rgba(99,102,241,0.04); top: -40px; right: -30px;
+          pointer-events: none; user-select: none;
+          font-family: Georgia, serif;
+        }
+
+        .reg-brand-top { position: relative; z-index: 1; }
+        .reg-brand-badge {
+          display: inline-flex; align-items: center; gap: 6px;
+          border: 1px solid rgba(255,255,255,0.08); border-radius: 100px;
+          padding: 6px 14px; font-size: 11.5px; color: rgba(255,255,255,0.4);
+          margin-bottom: 32px;
+        }
+
+        .reg-brand-mid {
+          position: relative; z-index: 1; flex: 1;
+          display: flex; flex-direction: column; justify-content: center;
+          padding: 40px 0;
+        }
+        .reg-brand-headline {
+          font-size: clamp(28px, 3.5vw, 44px); font-weight: 800;
+          color: #fff; letter-spacing: -1px; line-height: 1.15;
+          margin-bottom: 16px;
+        }
+        .reg-brand-headline-accent {
+          background: linear-gradient(135deg, #a78bfa 0%, #818cf8 50%, #67e8f9 100%);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        .reg-brand-sub {
+          font-size: 15px; color: rgba(255,255,255,0.38);
+          line-height: 1.65; max-width: 380px; margin-bottom: 44px;
+        }
+
+        /* Feature cards */
+        .reg-features { display: flex; flex-direction: column; gap: 12px; }
+        .reg-feat-card {
+          display: flex; align-items: flex-start; gap: 14px;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: 14px; padding: 16px 18px;
+          transition: border-color 0.2s, background 0.2s;
+        }
+        .reg-feat-card:hover {
+          border-color: rgba(99,102,241,0.3); background: rgba(99,102,241,0.05);
+        }
+        .reg-feat-icon {
+          width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+          display: flex; align-items: center; justify-content: center;
+        }
+        .reg-feat-icon-1 { background: rgba(99,102,241,0.15); }
+        .reg-feat-icon-2 { background: rgba(34,211,238,0.12); }
+        .reg-feat-icon-3 { background: rgba(74,222,128,0.12); }
+        .reg-feat-text { flex: 1; }
+        .reg-feat-title {
+          font-size: 13.5px; font-weight: 600; color: rgba(255,255,255,0.85);
+          margin-bottom: 2px;
+        }
+        .reg-feat-desc { font-size: 12px; color: rgba(255,255,255,0.3); line-height: 1.4; }
+
+        .reg-brand-bottom {
+          position: relative; z-index: 1;
+          padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.06);
+          display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+        }
+        .reg-stat { text-align: center; }
+        .reg-stat-num { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+        .reg-stat-lbl { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 1px; }
+        .reg-stat-div { width: 1px; height: 28px; background: rgba(255,255,255,0.08); }
+
+        @media (max-width: 860px) {
+          .reg-brand-side { display: none; }
+          .reg-form-side { width: 100%; padding: 36px 28px; }
         }
       `}</style>
 
-      <div className="split-page">
+      <div className="reg-page">
 
-        {/* Form side */}
-        <div className="split-form-side">
-          <div className="split-form-glow" />
-          <div className="split-form-inner">
-
-            <Link to="/" className="split-logo">
-              <div className="split-logo-icon">¶</div>
-              <span className="split-logo-text">Pilcrow</span>
+        {/* ── LEFT: Form ── */}
+        <div className="reg-form-side">
+          <div className="reg-top-nav">
+            <Link to="/" className="reg-logo">
+              <div className="reg-logo-icon">¶</div>
+              <span className="reg-logo-text">Pilcrow</span>
             </Link>
+            <span className="reg-login-link">
+              Already a member? <Link to="/login">Log in</Link>
+            </span>
+          </div>
 
-            <h1 className="split-title">Create account</h1>
-            <p className="split-sub">Join Pilcrow and start sharing your ideas</p>
+          <div className="reg-form-body">
+            <div className="reg-eyebrow">
+              <span className="reg-eyebrow-dot" />
+              Free forever — no credit card
+            </div>
+            <h1 className="reg-title">Create your<br />account</h1>
+            <p className="reg-sub">Join thousands of writers sharing ideas on Pilcrow.</p>
 
-            {error && <div className="alert alert-error">{error}</div>}
+            {error && <div className="reg-alert">{error}</div>}
 
             <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label>Name</label>
-                <input name="name" value={form.name} onChange={handleChange} placeholder="Your name" required />
+              <div className="reg-field">
+                <label className="reg-label">Full name</label>
+                <div className="reg-input-wrap">
+                  <span className="reg-input-icon">
+                    <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8">
+                      <path d="M10 10a4 4 0 100-8 4 4 0 000 8z"/><path d="M3 18c0-3.314 3.134-6 7-6s7 2.686 7 6"/>
+                    </svg>
+                  </span>
+                  <input className="reg-input" name="name" value={form.name} onChange={handleChange} placeholder="Your name" required />
+                </div>
               </div>
-              <div className="form-group">
-                <label>Email</label>
-                <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="you@example.com" required />
+
+              <div className="reg-field">
+                <label className="reg-label">Email address</label>
+                <div className="reg-input-wrap">
+                  <span className="reg-input-icon">
+                    <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8">
+                      <rect x="2" y="4" width="16" height="13" rx="2"/><path d="M2 7l8 5 8-5"/>
+                    </svg>
+                  </span>
+                  <input className="reg-input" type="email" name="email" value={form.email} onChange={handleChange} placeholder="you@example.com" required />
+                </div>
               </div>
-              <div className="form-group">
-                <label>Password</label>
-                <input type="password" name="password" value={form.password} onChange={handleChange} placeholder="At least 6 characters" required minLength={6} />
+
+              <div className="reg-field">
+                <label className="reg-label">Password</label>
+                <div className="reg-input-wrap">
+                  <span className="reg-input-icon">
+                    <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8">
+                      <rect x="4" y="9" width="12" height="9" rx="2"/><path d="M7 9V6a3 3 0 016 0v3"/>
+                    </svg>
+                  </span>
+                  <input className="reg-input" type="password" name="password" value={form.password} onChange={handleChange} placeholder="At least 6 characters" required minLength={6} />
+                </div>
               </div>
-              <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '13px' }} disabled={loading}>
-                {loading ? 'Creating account…' : 'Create Account'}
+
+              <button type="submit" className="reg-submit" disabled={loading}>
+                {loading ? 'Creating account…' : (
+                  <>
+                    Create Account
+                    <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M5 10h10M10 5l5 5-5 5"/>
+                    </svg>
+                  </>
+                )}
               </button>
             </form>
 
-            <div className="divider">or</div>
+            <div className="reg-divider">or</div>
 
-            <button className="btn btn-google" onClick={handleGoogle}>
+            <button className="reg-google" onClick={handleGoogle}>
               <svg width="17" height="17" viewBox="0 0 18 18">
                 <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>
                 <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"/>
@@ -176,27 +371,89 @@ export default function Register() {
               </svg>
               Continue with Google
             </button>
-
-            <p className="split-footer">
-              Already have an account? <Link to="/login">Log in</Link>
-            </p>
           </div>
+
+          <p className="reg-form-footer">
+            By signing up you agree to our <a href="#">Terms</a> &amp; <a href="#">Privacy Policy</a>
+          </p>
         </div>
 
-        {/* Image side */}
-        <div className="split-image-side">
-          <img
-            src="https://picsum.photos/seed/pilcrow-register/960/1200"
-            alt="Pilcrow — write beautifully"
-          />
-          <div className="split-image-overlay" />
-          <div className="split-image-brand">
-            <p className="split-quote">
-              "Write once,<br />share with the world."
+        {/* ── RIGHT: Brand panel ── */}
+        <div className="reg-brand-side">
+          <div className="reg-brand-glow-1" />
+          <div className="reg-brand-glow-2" />
+          <div className="reg-brand-glow-3" />
+          <div className="reg-bg-char">¶</div>
+
+          <div className="reg-brand-top">
+            <div className="reg-brand-badge">
+              <svg width="11" height="11" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+              Trusted by writers worldwide
+            </div>
+          </div>
+
+          <div className="reg-brand-mid">
+            <h2 className="reg-brand-headline">
+              Your ideas deserve<br />
+              <span className="reg-brand-headline-accent">a beautiful home.</span>
+            </h2>
+            <p className="reg-brand-sub">
+              Pilcrow gives you the tools to write clearly, publish instantly, and build an audience that cares about what you have to say.
             </p>
-            <div className="split-quote-sub">
-              <span className="split-quote-dot" />
-              Pilcrow — a space for ideas that matter
+
+            <div className="reg-features">
+              <div className="reg-feat-card">
+                <div className="reg-feat-icon reg-feat-icon-1">
+                  <svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="#818cf8" strokeWidth="1.8">
+                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                  </svg>
+                </div>
+                <div className="reg-feat-text">
+                  <div className="reg-feat-title">Effortless writing</div>
+                  <div className="reg-feat-desc">Clean editor, zero distractions. Just you and your words.</div>
+                </div>
+              </div>
+              <div className="reg-feat-card">
+                <div className="reg-feat-icon reg-feat-icon-2">
+                  <svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="#22d3ee" strokeWidth="1.8">
+                    <path d="M13 7H7m6 4H7m6 4H7M5 3h10a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/>
+                  </svg>
+                </div>
+                <div className="reg-feat-text">
+                  <div className="reg-feat-title">Instant publishing</div>
+                  <div className="reg-feat-desc">Hit publish and your post is live globally in seconds.</div>
+                </div>
+              </div>
+              <div className="reg-feat-card">
+                <div className="reg-feat-icon reg-feat-icon-3">
+                  <svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="#4ade80" strokeWidth="1.8">
+                    <path d="M17 20H3a2 2 0 01-2-2V6l5-4h11a2 2 0 012 2v14a2 2 0 01-2 2z"/><path d="M3 6h5V2"/>
+                  </svg>
+                </div>
+                <div className="reg-feat-text">
+                  <div className="reg-feat-title">Free forever</div>
+                  <div className="reg-feat-desc">No plans, no limits, no credit card — ever.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="reg-brand-bottom">
+            <div className="reg-stat">
+              <div className="reg-stat-num">12+</div>
+              <div className="reg-stat-lbl">Posts live</div>
+            </div>
+            <div className="reg-stat-div" />
+            <div className="reg-stat">
+              <div className="reg-stat-num">3</div>
+              <div className="reg-stat-lbl">Writers</div>
+            </div>
+            <div className="reg-stat-div" />
+            <div className="reg-stat">
+              <div className="reg-stat-num">100%</div>
+              <div className="reg-stat-lbl">Free</div>
             </div>
           </div>
         </div>
