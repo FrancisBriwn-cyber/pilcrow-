@@ -138,9 +138,9 @@ export default function Feed() {
           50%{transform:translateX(-50%) translateY(6px)}
         }
 
-        .feed-section { background: #080808; min-height: 60vh; padding: 56px 16px 80px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .feed-section { background: #080808; min-height: 60vh; padding: 64px 24px 96px; border-top: 1px solid rgba(255,255,255,0.06); }
         .feed-header {
-          max-width: 720px; margin: 0 auto 28px;
+          max-width: 1200px; margin: 0 auto 32px;
           display: flex; align-items: center; justify-content: space-between;
           flex-wrap: wrap; gap: 12px;
         }
@@ -149,6 +149,18 @@ export default function Feed() {
           font-size: 12px; color: rgba(255,255,255,0.4);
           background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.08);
           padding: 3px 10px; border-radius: 100px;
+        }
+        .feed-grid {
+          max-width: 1200px; margin: 0 auto;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 18px;
+        }
+        @media (max-width: 900px) {
+          .feed-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 560px) {
+          .feed-grid { grid-template-columns: 1fr; }
         }
       `}</style>
 
@@ -254,18 +266,23 @@ export default function Feed() {
           <h2 className="feed-title">Latest Posts</h2>
           {!loading && <span className="feed-count">{posts.length} posts</span>}
         </div>
-        <div style={{ maxWidth: '720px', margin: '0 auto' }}>
-          {loading && <LoadingSpinner />}
-          {error && <div className="alert alert-error">{error}</div>}
-          {!loading && !error && posts.length === 0 && (
-            <p style={{ color: '#6b7280', textAlign: 'center', padding: '60px 0' }}>
-              No posts yet. Be the first!
-            </p>
-          )}
-          {posts.map((post) => (
-            <PostCard key={post.id} post={post} onDelete={handleDelete} />
-          ))}
-        </div>
+
+        {loading && <div style={{ maxWidth: '1200px', margin: '0 auto' }}><LoadingSpinner /></div>}
+        {error && <div style={{ maxWidth: '1200px', margin: '0 auto' }}><div className="alert alert-error">{error}</div></div>}
+
+        {!loading && !error && posts.length === 0 && (
+          <p style={{ color: 'rgba(255,255,255,0.25)', textAlign: 'center', padding: '60px 0' }}>
+            No posts yet. Be the first!
+          </p>
+        )}
+
+        {!loading && !error && posts.length > 0 && (
+          <div className="feed-grid">
+            {posts.map((post, i) => (
+              <PostCard key={post.id} post={post} onDelete={handleDelete} featured={i === 0} />
+            ))}
+          </div>
+        )}
       </section>
     </>
   );

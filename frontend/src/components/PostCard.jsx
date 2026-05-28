@@ -2,17 +2,36 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 
-function formatDate(iso) {
-  return new Date(iso).toLocaleDateString('en-US', {
-    year: 'numeric', month: 'short', day: 'numeric'
-  });
+const CARD_GRADIENTS = [
+  'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+  'linear-gradient(135deg, #0284c7 0%, #4f46e5 100%)',
+  'linear-gradient(135deg, #7c3aed 0%, #be185d 100%)',
+  'linear-gradient(135deg, #059669 0%, #0284c7 100%)',
+  'linear-gradient(135deg, #b45309 0%, #dc2626 100%)',
+  'linear-gradient(135deg, #be185d 0%, #7c3aed 100%)',
+  'linear-gradient(135deg, #0e7490 0%, #059669 100%)',
+];
+
+function pickGradient(title = '') {
+  const hash = title.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  return CARD_GRADIENTS[hash % CARD_GRADIENTS.length];
 }
 
-export default function PostCard({ post, onDelete }) {
+function readTime(text = '') {
+  return Math.max(1, Math.ceil(text.split(/\s+/).length / 200));
+}
+
+function formatDate(iso) {
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+export default function PostCard({ post, onDelete, featured = false }) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const isOwner = user && user.id === post.user_id;
   const initials = post.author_name?.charAt(0).toUpperCase() || '?';
+  const mins = readTime(post.content);
+  const gradient = pickGradient(post.title);
 
   async function handleDelete() {
     if (!window.confirm('Delete this post? This cannot be undone.')) return;
@@ -24,114 +43,256 @@ export default function PostCard({ post, onDelete }) {
     }
   }
 
+  if (featured) {
+    return (
+      <>
+        <style>{`
+          .pc-feat {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px; overflow: hidden;
+            display: grid; grid-template-columns: 1fr 380px;
+            min-height: 280px;
+            transition: border-color 0.2s, transform 0.2s;
+            grid-column: 1 / -1;
+          }
+          .pc-feat:hover { border-color: rgba(99,102,241,0.35); transform: translateY(-2px); }
+          .pc-feat-body {
+            padding: 36px 40px;
+            display: flex; flex-direction: column; justify-content: space-between;
+          }
+          .pc-feat-tag {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25);
+            border-radius: 100px; padding: 4px 12px;
+            font-size: 11px; font-weight: 600; color: #a5b4fc;
+            letter-spacing: 0.5px; text-transform: uppercase;
+            margin-bottom: 18px; width: fit-content;
+          }
+          .pc-feat-title {
+            font-size: clamp(20px, 2.5vw, 28px); font-weight: 800;
+            color: #fff; letter-spacing: -0.5px; line-height: 1.25;
+            margin-bottom: 14px;
+            transition: color 0.15s;
+          }
+          .pc-feat-title:hover { color: #a5b4fc; }
+          .pc-feat-excerpt {
+            font-size: 14.5px; color: rgba(255,255,255,0.45);
+            line-height: 1.7; margin-bottom: 28px;
+            display: -webkit-box; -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical; overflow: hidden;
+          }
+          .pc-feat-footer {
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+          }
+          .pc-feat-author-row { display: flex; align-items: center; gap: 10px; }
+          .pc-feat-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 13px; overflow: hidden; flex-shrink: 0;
+            border: 2px solid rgba(255,255,255,0.1);
+          }
+          .pc-feat-name { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75); }
+          .pc-feat-meta { font-size: 11.5px; color: rgba(255,255,255,0.28); margin-top: 1px; }
+          .pc-feat-right { display: flex; align-items: center; gap: 8px; }
+          .pc-feat-read {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: #fff; color: #0a0a0a;
+            border: none; cursor: pointer;
+            font-size: 13px; font-weight: 600; font-family: inherit;
+            padding: 9px 20px; border-radius: 10px;
+            text-decoration: none;
+            transition: opacity 0.15s, transform 0.1s;
+          }
+          .pc-feat-read:hover { opacity: 0.85; transform: translateY(-1px); }
+          .pc-feat-image {
+            position: relative; overflow: hidden;
+          }
+          .pc-feat-image img {
+            width: 100%; height: 100%; object-fit: cover;
+          }
+          .pc-feat-image-placeholder {
+            width: 100%; height: 100%;
+            background: ${gradient};
+            display: flex; align-items: center; justify-content: center;
+            font-size: 64px; font-weight: 900; color: rgba(255,255,255,0.08);
+            letter-spacing: -4px;
+          }
+          @media (max-width: 700px) {
+            .pc-feat { grid-template-columns: 1fr; }
+            .pc-feat-image { height: 180px; }
+          }
+        `}</style>
+
+        <article className="pc-feat">
+          <div className="pc-feat-body">
+            <div>
+              <div className="pc-feat-tag">
+                <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg>
+                Featured
+              </div>
+              <Link to={`/posts/${post.id}`} style={{ textDecoration: 'none' }}>
+                <h2 className="pc-feat-title">{post.title}</h2>
+              </Link>
+              <p className="pc-feat-excerpt">
+                {post.content.length > 240 ? post.content.slice(0, 240) + '…' : post.content}
+              </p>
+            </div>
+            <div className="pc-feat-footer">
+              <div className="pc-feat-author-row">
+                <Link to={`/users/${post.user_id}`} style={{ textDecoration: 'none' }}>
+                  <div className="pc-feat-avatar">
+                    {post.author_avatar
+                      ? <img src={post.author_avatar} alt={post.author_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      : initials}
+                  </div>
+                </Link>
+                <div>
+                  <Link to={`/users/${post.user_id}`} className="pc-feat-name" style={{ textDecoration: 'none' }}>{post.author_name}</Link>
+                  <div className="pc-feat-meta">{formatDate(post.created_at)} · {mins} min read</div>
+                </div>
+              </div>
+              <div className="pc-feat-right">
+                {isOwner && (
+                  <>
+                    <button className="btn btn-outline" style={{ fontSize: '12px', padding: '6px 12px' }} onClick={() => navigate(`/posts/${post.id}/edit`)}>Edit</button>
+                    <button className="btn btn-danger" style={{ fontSize: '12px', padding: '6px 12px' }} onClick={handleDelete}>Delete</button>
+                  </>
+                )}
+                <Link to={`/posts/${post.id}`} className="pc-feat-read">
+                  Read article
+                  <svg width="12" height="12" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M5 10h10M10 5l5 5-5 5"/>
+                  </svg>
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="pc-feat-image">
+            {post.media_url
+              ? <img src={post.media_url} alt={post.title} />
+              : <div className="pc-feat-image-placeholder">¶</div>
+            }
+          </div>
+        </article>
+      </>
+    );
+  }
+
   return (
     <>
       <style>{`
         .pc {
           background: rgba(255,255,255,0.03);
           border: 1px solid rgba(255,255,255,0.07);
-          border-radius: 14px; padding: 22px 24px;
-          margin-bottom: 14px;
-          transition: border-color 0.2s, background 0.2s;
+          border-radius: 16px; overflow: hidden;
+          display: flex; flex-direction: column;
+          transition: border-color 0.2s, transform 0.2s, background 0.2s;
+          height: 100%;
         }
-        .pc:hover {
-          border-color: rgba(255,255,255,0.12);
-          background: rgba(255,255,255,0.04);
+        .pc:hover { border-color: rgba(255,255,255,0.14); transform: translateY(-3px); background: rgba(255,255,255,0.045); }
+        .pc-cover {
+          width: 100%; height: 150px; overflow: hidden; flex-shrink: 0; position: relative;
         }
-        .pc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-        .pc-avatar {
-          width: 34px; height: 34px; border-radius: 50%;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
-          color: #fff; display: flex; align-items: center; justify-content: center;
-          font-weight: 600; font-size: 13px; flex-shrink: 0; overflow: hidden;
-          border: 1.5px solid rgba(255,255,255,0.1);
+        .pc-cover img { width: 100%; height: 100%; object-fit: cover; }
+        .pc-cover-placeholder {
+          width: 100%; height: 100%;
+          background: ${gradient};
+          display: flex; align-items: center; justify-content: center;
+          font-size: 42px; font-weight: 900; color: rgba(255,255,255,0.1);
         }
-        .pc-author {
-          font-weight: 600; font-size: 13.5px; color: rgba(255,255,255,0.85);
-          transition: color 0.15s;
+        .pc-body {
+          padding: 20px 22px 0; flex: 1; display: flex; flex-direction: column;
         }
-        .pc-author:hover { color: #818cf8; }
-        .pc-date { font-size: 11.5px; color: rgba(255,255,255,0.28); margin-top: 1px; }
+        .pc-title-link { text-decoration: none; }
         .pc-title {
-          font-size: 17px; font-weight: 700; color: #fff;
-          letter-spacing: -0.2px; margin-bottom: 8px; line-height: 1.35;
+          font-size: 16px; font-weight: 700; color: #fff;
+          letter-spacing: -0.2px; line-height: 1.4;
+          margin-bottom: 10px;
+          display: -webkit-box; -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical; overflow: hidden;
           transition: color 0.15s;
         }
         .pc-title:hover { color: #a5b4fc; }
         .pc-excerpt {
-          font-size: 13.5px; color: rgba(255,255,255,0.42);
-          line-height: 1.65; margin-bottom: 14px;
-        }
-        .pc-media {
-          width: 100%; max-height: 260px; object-fit: cover;
-          border-radius: 9px; margin-bottom: 14px;
-          border: 1px solid rgba(255,255,255,0.07);
+          font-size: 13px; color: rgba(255,255,255,0.38);
+          line-height: 1.65; flex: 1;
+          display: -webkit-box; -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical; overflow: hidden;
         }
         .pc-footer {
-          display: flex; align-items: center; justify-content: space-between;
-          padding-top: 2px;
+          padding: 16px 22px 20px;
+          border-top: 1px solid rgba(255,255,255,0.06);
+          margin-top: 16px;
+          display: flex; align-items: center; justify-content: space-between; gap: 8px;
         }
-        .pc-read {
-          font-size: 12.5px; color: rgba(255,255,255,0.3);
-          display: inline-flex; align-items: center; gap: 5px;
-          transition: color 0.15s;
+        .pc-author-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
+        .pc-avatar {
+          width: 28px; height: 28px; border-radius: 50%;
+          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          color: #fff; display: flex; align-items: center; justify-content: center;
+          font-weight: 600; font-size: 11px; flex-shrink: 0; overflow: hidden;
+          border: 1.5px solid rgba(255,255,255,0.1);
         }
-        .pc-read:hover { color: #818cf8; }
-        .pc-actions { display: flex; gap: 6px; }
+        .pc-author-info { min-width: 0; }
+        .pc-author { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.15s; }
+        .pc-author:hover { color: #818cf8; }
+        .pc-meta { font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 1px; white-space: nowrap; }
+        .pc-read-btn {
+          display: inline-flex; align-items: center; gap: 4px;
+          font-size: 12px; color: rgba(255,255,255,0.3);
+          white-space: nowrap; flex-shrink: 0;
+          transition: color 0.15s; text-decoration: none;
+        }
+        .pc-read-btn:hover { color: #818cf8; }
+        .pc-owner-actions { display: flex; gap: 5px; }
       `}</style>
 
       <article className="pc">
-        <div className="pc-header">
-          <Link to={`/users/${post.user_id}`} style={{ textDecoration: 'none' }}>
-            <div className="pc-avatar">
-              {post.author_avatar
-                ? <img src={post.author_avatar} alt={post.author_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                : initials
-              }
-            </div>
-          </Link>
-          <div>
-            <Link to={`/users/${post.user_id}`} className="pc-author">{post.author_name}</Link>
-            <div className="pc-date">{formatDate(post.created_at)}</div>
-          </div>
+        <div className="pc-cover">
+          {post.media_url
+            ? <img src={post.media_url} alt={post.title} loading="lazy" />
+            : <div className="pc-cover-placeholder">¶</div>
+          }
         </div>
 
-        <Link to={`/posts/${post.id}`} style={{ textDecoration: 'none' }}>
-          <h2 className="pc-title">{post.title}</h2>
-        </Link>
-
-        <p className="pc-excerpt">
-          {post.content.length > 280 ? post.content.slice(0, 280) + '…' : post.content}
-        </p>
-
-        {post.media_url && (
-          <img src={post.media_url} alt="Post media" className="pc-media" loading="lazy" />
-        )}
+        <div className="pc-body">
+          <Link to={`/posts/${post.id}`} className="pc-title-link">
+            <h2 className="pc-title">{post.title}</h2>
+          </Link>
+          <p className="pc-excerpt">
+            {post.content.length > 200 ? post.content.slice(0, 200) + '…' : post.content}
+          </p>
+        </div>
 
         <div className="pc-footer">
-          <Link to={`/posts/${post.id}`} className="pc-read">
-            Read more
-            <svg width="11" height="11" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M5 10h10M10 5l5 5-5 5"/>
-            </svg>
-          </Link>
-          {isOwner && (
-            <div className="pc-actions">
-              <button
-                className="btn btn-outline"
-                style={{ fontSize: '12px', padding: '5px 10px' }}
-                onClick={() => navigate(`/posts/${post.id}/edit`)}
-              >
-                Edit
-              </button>
-              <button
-                className="btn btn-danger"
-                style={{ fontSize: '12px', padding: '5px 10px' }}
-                onClick={handleDelete}
-              >
-                Delete
-              </button>
+          <div className="pc-author-row">
+            <Link to={`/users/${post.user_id}`} style={{ textDecoration: 'none', flexShrink: 0 }}>
+              <div className="pc-avatar">
+                {post.author_avatar
+                  ? <img src={post.author_avatar} alt={post.author_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  : initials}
+              </div>
+            </Link>
+            <div className="pc-author-info">
+              <Link to={`/users/${post.user_id}`} className="pc-author">{post.author_name}</Link>
+              <div className="pc-meta">{formatDate(post.created_at)} · {mins} min</div>
             </div>
+          </div>
+
+          {isOwner ? (
+            <div className="pc-owner-actions">
+              <button className="btn btn-outline" style={{ fontSize: '11px', padding: '4px 9px' }} onClick={() => navigate(`/posts/${post.id}/edit`)}>Edit</button>
+              <button className="btn btn-danger" style={{ fontSize: '11px', padding: '4px 9px' }} onClick={handleDelete}>Delete</button>
+            </div>
+          ) : (
+            <Link to={`/posts/${post.id}`} className="pc-read-btn">
+              Read
+              <svg width="10" height="10" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M5 10h10M10 5l5 5-5 5"/>
+              </svg>
+            </Link>
           )}
         </div>
       </article>
