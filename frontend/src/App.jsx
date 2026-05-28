@@ -1,4 +1,3 @@
-import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -16,7 +15,7 @@ export default function App() {
   return (
     <>
       <Navbar />
-      <main style={{ paddingTop: '72px', minHeight: '100vh' }}>
+      <main style={{ minHeight: '100vh' }}>
         <Routes>
           <Route path="/" element={<Feed />} />
           <Route path="/posts/:id" element={<SinglePost />} />
