@@ -50,7 +50,7 @@ export default function Register() {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          padding: 36px 52px 36px;
+          padding: 80px 52px 40px;
           position: relative;
           overflow: hidden;
         }
@@ -62,18 +62,23 @@ export default function Register() {
         }
         .reg-top-nav {
           display: flex; align-items: center; justify-content: space-between;
-          position: relative; z-index: 1;
+          position: relative; z-index: 1; margin-bottom: 8px;
         }
         .reg-logo {
-          display: flex; align-items: center; gap: 8px; text-decoration: none;
+          display: flex; align-items: center; gap: 10px; text-decoration: none;
+          transition: opacity 0.15s;
         }
+        .reg-logo:hover { opacity: 0.8; }
         .reg-logo-icon {
-          width: 30px; height: 30px; border-radius: 8px;
+          width: 40px; height: 40px; border-radius: 12px;
           background: linear-gradient(135deg, #6366f1, #8b5cf6);
           display: flex; align-items: center; justify-content: center;
-          font-size: 14px; font-weight: 800; color: #fff;
+          font-size: 19px; font-weight: 900; color: #fff;
+          box-shadow: 0 4px 16px rgba(99,102,241,0.45);
         }
-        .reg-logo-text { font-size: 15px; font-weight: 700; color: #fff; }
+        .reg-logo-text {
+          font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -0.3px;
+        }
         .reg-login-link {
           font-size: 13px; color: rgba(255,255,255,0.35);
         }
