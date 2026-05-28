@@ -2,21 +2,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 
-const CARD_GRADIENTS = [
-  'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
-  'linear-gradient(135deg, #0284c7 0%, #4f46e5 100%)',
-  'linear-gradient(135deg, #7c3aed 0%, #be185d 100%)',
-  'linear-gradient(135deg, #059669 0%, #0284c7 100%)',
-  'linear-gradient(135deg, #b45309 0%, #dc2626 100%)',
-  'linear-gradient(135deg, #be185d 0%, #7c3aed 100%)',
-  'linear-gradient(135deg, #0e7490 0%, #059669 100%)',
-];
-
-function pickGradient(title = '') {
-  const hash = title.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-  return CARD_GRADIENTS[hash % CARD_GRADIENTS.length];
-}
-
 function readTime(text = '') {
   return Math.max(1, Math.ceil(text.split(/\s+/).length / 200));
 }
@@ -25,13 +10,16 @@ function formatDate(iso) {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
+function coverImg(post, w, h) {
+  return post.media_url || `https://picsum.photos/seed/${post.id}/${w}/${h}`;
+}
+
 export default function PostCard({ post, onDelete, featured = false }) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const isOwner = user && user.id === post.user_id;
   const initials = post.author_name?.charAt(0).toUpperCase() || '?';
   const mins = readTime(post.content);
-  const gradient = pickGradient(post.title);
 
   async function handleDelete() {
     if (!window.confirm('Delete this post? This cannot be undone.')) return;
@@ -51,14 +39,14 @@ export default function PostCard({ post, onDelete, featured = false }) {
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 18px; overflow: hidden;
-            display: grid; grid-template-columns: 1fr 380px;
-            min-height: 280px;
+            display: grid; grid-template-columns: 1fr 420px;
+            min-height: 300px;
             transition: border-color 0.2s, transform 0.2s;
             grid-column: 1 / -1;
           }
-          .pc-feat:hover { border-color: rgba(99,102,241,0.35); transform: translateY(-2px); }
+          .pc-feat:hover { border-color: rgba(99,102,241,0.4); transform: translateY(-2px); }
           .pc-feat-body {
-            padding: 36px 40px;
+            padding: 40px 44px;
             display: flex; flex-direction: column; justify-content: space-between;
           }
           .pc-feat-tag {
@@ -72,8 +60,7 @@ export default function PostCard({ post, onDelete, featured = false }) {
           .pc-feat-title {
             font-size: clamp(20px, 2.5vw, 28px); font-weight: 800;
             color: #fff; letter-spacing: -0.5px; line-height: 1.25;
-            margin-bottom: 14px;
-            transition: color 0.15s;
+            margin-bottom: 14px; transition: color 0.15s;
           }
           .pc-feat-title:hover { color: #a5b4fc; }
           .pc-feat-excerpt {
@@ -83,7 +70,7 @@ export default function PostCard({ post, onDelete, featured = false }) {
             -webkit-box-orient: vertical; overflow: hidden;
           }
           .pc-feat-footer {
-            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+            display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
           }
           .pc-feat-author-row { display: flex; align-items: center; gap: 10px; }
           .pc-feat-avatar {
@@ -98,11 +85,9 @@ export default function PostCard({ post, onDelete, featured = false }) {
           .pc-feat-right { display: flex; align-items: center; gap: 8px; }
           .pc-feat-read {
             display: inline-flex; align-items: center; gap: 6px;
-            background: #fff; color: #0a0a0a;
-            border: none; cursor: pointer;
+            background: #fff; color: #0a0a0a; border: none; cursor: pointer;
             font-size: 13px; font-weight: 600; font-family: inherit;
-            padding: 9px 20px; border-radius: 10px;
-            text-decoration: none;
+            padding: 9px 20px; border-radius: 10px; text-decoration: none;
             transition: opacity 0.15s, transform 0.1s;
           }
           .pc-feat-read:hover { opacity: 0.85; transform: translateY(-1px); }
@@ -111,17 +96,19 @@ export default function PostCard({ post, onDelete, featured = false }) {
           }
           .pc-feat-image img {
             width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.4s ease;
           }
-          .pc-feat-image-placeholder {
-            width: 100%; height: 100%;
-            background: ${gradient};
-            display: flex; align-items: center; justify-content: center;
-            font-size: 64px; font-weight: 900; color: rgba(255,255,255,0.08);
-            letter-spacing: -4px;
+          .pc-feat:hover .pc-feat-image img { transform: scale(1.04); }
+          .pc-feat-image::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(to right, rgba(8,8,8,0.45) 0%, transparent 35%);
+            pointer-events: none;
           }
-          @media (max-width: 700px) {
+          @media (max-width: 780px) {
             .pc-feat { grid-template-columns: 1fr; }
-            .pc-feat-image { height: 180px; }
+            .pc-feat-image { height: 200px; }
+            .pc-feat-image::after { background: linear-gradient(to bottom, transparent 40%, rgba(8,8,8,0.6)); }
           }
         `}</style>
 
@@ -129,7 +116,7 @@ export default function PostCard({ post, onDelete, featured = false }) {
           <div className="pc-feat-body">
             <div>
               <div className="pc-feat-tag">
-                <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg>
+                <svg width="7" height="7" viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg>
                 Featured
               </div>
               <Link to={`/posts/${post.id}`} style={{ textDecoration: 'none' }}>
@@ -170,10 +157,7 @@ export default function PostCard({ post, onDelete, featured = false }) {
             </div>
           </div>
           <div className="pc-feat-image">
-            {post.media_url
-              ? <img src={post.media_url} alt={post.title} />
-              : <div className="pc-feat-image-placeholder">¶</div>
-            }
+            <img src={coverImg(post, 840, 520)} alt={post.title} />
           </div>
         </article>
       </>
@@ -191,16 +175,20 @@ export default function PostCard({ post, onDelete, featured = false }) {
           transition: border-color 0.2s, transform 0.2s, background 0.2s;
           height: 100%;
         }
-        .pc:hover { border-color: rgba(255,255,255,0.14); transform: translateY(-3px); background: rgba(255,255,255,0.045); }
+        .pc:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-4px); background: rgba(255,255,255,0.045); }
         .pc-cover {
-          width: 100%; height: 150px; overflow: hidden; flex-shrink: 0; position: relative;
+          width: 100%; height: 176px; overflow: hidden; flex-shrink: 0; position: relative;
         }
-        .pc-cover img { width: 100%; height: 100%; object-fit: cover; }
-        .pc-cover-placeholder {
-          width: 100%; height: 100%;
-          background: ${gradient};
-          display: flex; align-items: center; justify-content: center;
-          font-size: 42px; font-weight: 900; color: rgba(255,255,255,0.1);
+        .pc-cover img {
+          width: 100%; height: 100%; object-fit: cover;
+          transition: transform 0.4s ease;
+        }
+        .pc:hover .pc-cover img { transform: scale(1.06); }
+        .pc-cover::after {
+          content: '';
+          position: absolute; inset: 0;
+          background: linear-gradient(to bottom, transparent 50%, rgba(8,8,8,0.55));
+          pointer-events: none;
         }
         .pc-body {
           padding: 20px 22px 0; flex: 1; display: flex; flex-direction: column;
@@ -208,8 +196,7 @@ export default function PostCard({ post, onDelete, featured = false }) {
         .pc-title-link { text-decoration: none; }
         .pc-title {
           font-size: 16px; font-weight: 700; color: #fff;
-          letter-spacing: -0.2px; line-height: 1.4;
-          margin-bottom: 10px;
+          letter-spacing: -0.2px; line-height: 1.4; margin-bottom: 10px;
           display: -webkit-box; -webkit-line-clamp: 2;
           -webkit-box-orient: vertical; overflow: hidden;
           transition: color 0.15s;
@@ -222,7 +209,7 @@ export default function PostCard({ post, onDelete, featured = false }) {
           -webkit-box-orient: vertical; overflow: hidden;
         }
         .pc-footer {
-          padding: 16px 22px 20px;
+          padding: 14px 22px 20px;
           border-top: 1px solid rgba(255,255,255,0.06);
           margin-top: 16px;
           display: flex; align-items: center; justify-content: space-between; gap: 8px;
@@ -236,7 +223,11 @@ export default function PostCard({ post, onDelete, featured = false }) {
           border: 1.5px solid rgba(255,255,255,0.1);
         }
         .pc-author-info { min-width: 0; }
-        .pc-author { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.15s; }
+        .pc-author {
+          font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7);
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+          transition: color 0.15s; display: block;
+        }
         .pc-author:hover { color: #818cf8; }
         .pc-meta { font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 1px; white-space: nowrap; }
         .pc-read-btn {
@@ -251,10 +242,7 @@ export default function PostCard({ post, onDelete, featured = false }) {
 
       <article className="pc">
         <div className="pc-cover">
-          {post.media_url
-            ? <img src={post.media_url} alt={post.title} loading="lazy" />
-            : <div className="pc-cover-placeholder">¶</div>
-          }
+          <img src={coverImg(post, 600, 352)} alt={post.title} loading="lazy" />
         </div>
 
         <div className="pc-body">
