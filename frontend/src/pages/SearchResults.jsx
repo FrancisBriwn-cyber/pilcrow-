@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import api from '../api/axios';
 import PostCard from '../components/PostCard';
@@ -26,29 +26,76 @@ export default function SearchResults() {
   }
 
   return (
-    <div className="container" style={{ paddingTop: '24px', paddingBottom: '40px' }}>
-      <h1 style={{ fontSize: '22px', fontWeight: 700, marginBottom: '8px' }}>
-        Search Results
-      </h1>
-      {query && (
-        <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '24px' }}>
-          Showing results for "<strong>{query}</strong>"
-        </p>
-      )}
+    <>
+      <style>{`
+        .sr-page {
+          min-height: 100vh;
+          background: #080808;
+          padding: 100px 16px 60px;
+          position: relative;
+        }
+        .sr-glow {
+          position: absolute; width: 600px; height: 250px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(99,102,241,0.09) 0%, transparent 70%);
+          top: 0; left: 50%; transform: translateX(-50%);
+          pointer-events: none;
+        }
+        .sr-inner { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+        .sr-eyebrow {
+          font-size: 12px; font-weight: 500; letter-spacing: 1px;
+          text-transform: uppercase; color: rgba(255,255,255,0.3);
+          margin-bottom: 10px;
+        }
+        .sr-title {
+          font-size: 26px; font-weight: 700; color: #fff;
+          letter-spacing: -0.4px; margin-bottom: 6px;
+        }
+        .sr-query-badge {
+          display: inline-flex; align-items: center; gap: 6px;
+          background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25);
+          border-radius: 100px; padding: 4px 12px;
+          font-size: 13px; color: #a5b4fc; margin-bottom: 28px;
+        }
+        .sr-empty {
+          text-align: center; padding: 80px 0;
+          color: rgba(255,255,255,0.25); font-size: 15px;
+        }
+        .sr-empty-icon {
+          font-size: 40px; margin-bottom: 14px; opacity: 0.3;
+        }
+      `}</style>
 
-      {loading && <LoadingSpinner message="Searching..." />}
-      {error && <div className="alert alert-error">{error}</div>}
+      <div className="sr-page">
+        <div className="sr-glow" />
+        <div className="sr-inner">
+          <p className="sr-eyebrow">Search</p>
+          <h1 className="sr-title">Results</h1>
 
-      {!loading && !error && posts.length === 0 && query && (
-        <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-muted)' }}>
-          <p style={{ fontSize: '16px' }}>No posts found for "{query}"</p>
-          <p style={{ fontSize: '14px', marginTop: '8px' }}>Try a different keyword.</p>
+          {query && (
+            <div className="sr-query-badge">
+              <svg width="12" height="12" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <circle cx="9" cy="9" r="6"/><path d="M15 15l3 3"/>
+              </svg>
+              {query}
+            </div>
+          )}
+
+          {loading && <LoadingSpinner message="Searching…" />}
+          {error && <div className="alert alert-error">{error}</div>}
+
+          {!loading && !error && posts.length === 0 && query && (
+            <div className="sr-empty">
+              <div className="sr-empty-icon">¶</div>
+              <p>No posts found for "{query}"</p>
+              <p style={{ fontSize: '13px', marginTop: '6px', color: 'rgba(255,255,255,0.18)' }}>Try a different keyword</p>
+            </div>
+          )}
+
+          {posts.map((post) => (
+            <PostCard key={post.id} post={post} onDelete={handleDelete} />
+          ))}
         </div>
-      )}
-
-      {posts.map((post) => (
-        <PostCard key={post.id} post={post} onDelete={handleDelete} />
-      ))}
-    </div>
+      </div>
+    </>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../api/axios';
 import PostCard from '../components/PostCard';
@@ -13,10 +13,7 @@ export default function UserProfile() {
 
   useEffect(() => {
     api.get(`/api/users/${id}`)
-      .then((res) => {
-        setProfile(res.data.user);
-        setPosts(res.data.posts);
-      })
+      .then((res) => { setProfile(res.data.user); setPosts(res.data.posts); })
       .catch((err) => {
         if (err.response?.status === 404) setError('User not found.');
         else setError('Failed to load profile.');
@@ -29,55 +26,109 @@ export default function UserProfile() {
   }
 
   if (loading) return <LoadingSpinner />;
-  if (error) return (
-    <div className="container" style={{ paddingTop: '40px' }}>
-      <div className="alert alert-error">{error}</div>
-    </div>
-  );
 
-  return (
-    <div className="container" style={{ paddingTop: '32px', paddingBottom: '40px' }}>
-      {/* Profile header */}
-      <div style={{
-        background: 'var(--card-bg)', border: '1px solid var(--border)',
-        borderRadius: 'var(--radius)', padding: '28px',
-        display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '28px'
-      }}>
-        <div style={{
-          width: '72px', height: '72px', borderRadius: '50%',
-          background: 'var(--primary)', color: '#fff',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontWeight: 700, fontSize: '28px', overflow: 'hidden', flexShrink: 0
-        }}>
-          {profile.avatar_url
-            ? <img src={profile.avatar_url} alt={profile.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            : profile.name.charAt(0).toUpperCase()
-          }
-        </div>
-        <div>
-          <h1 style={{ fontSize: '22px', fontWeight: 700 }}>{profile.name}</h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>{profile.email}</p>
-          <p style={{ color: 'var(--text-muted)', fontSize: '13px', marginTop: '4px' }}>
-            {posts.length} {posts.length === 1 ? 'post' : 'posts'}
-          </p>
+  if (error) return (
+    <>
+      <style>{`.up-page{min-height:100vh;background:#080808;padding:100px 16px 60px;}`}</style>
+      <div className="up-page">
+        <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+          <div className="alert alert-error">{error}</div>
         </div>
       </div>
+    </>
+  );
 
-      <h2 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px' }}>Posts by {profile.name}</h2>
+  const initials = profile.name.charAt(0).toUpperCase();
 
-      {posts.length === 0 ? (
-        <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '40px 0' }}>
-          No posts yet.
-        </p>
-      ) : (
-        posts.map((post) => (
-          <PostCard
-            key={post.id}
-            post={{ ...post, author_name: profile.name, author_avatar: profile.avatar_url }}
-            onDelete={handleDelete}
-          />
-        ))
-      )}
-    </div>
+  return (
+    <>
+      <style>{`
+        .up-page {
+          min-height: 100vh;
+          background: #080808;
+          padding: 100px 16px 60px;
+          position: relative;
+        }
+        .up-glow {
+          position: absolute; width: 600px; height: 300px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%);
+          top: 0; left: 50%; transform: translateX(-50%);
+          pointer-events: none;
+        }
+        .up-inner { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+        .up-profile-card {
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 16px; padding: 32px;
+          display: flex; align-items: center; gap: 22px;
+          margin-bottom: 32px;
+        }
+        .up-avatar {
+          width: 76px; height: 76px; border-radius: 50%;
+          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          color: #fff; display: flex; align-items: center; justify-content: center;
+          font-weight: 700; font-size: 28px; overflow: hidden; flex-shrink: 0;
+          border: 2px solid rgba(255,255,255,0.1);
+        }
+        .up-name {
+          font-size: 22px; font-weight: 700; color: #fff;
+          letter-spacing: -0.3px; margin-bottom: 4px;
+        }
+        .up-email { font-size: 13px; color: rgba(255,255,255,0.35); margin-bottom: 8px; }
+        .up-badge {
+          display: inline-flex; align-items: center; gap: 5px;
+          background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);
+          border-radius: 100px; padding: 3px 10px;
+          font-size: 12px; color: #a5b4fc; font-weight: 500;
+        }
+        .up-section-title {
+          font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.5);
+          letter-spacing: 0.5px; text-transform: uppercase; font-size: 12px;
+          margin-bottom: 16px;
+        }
+        .up-empty {
+          text-align: center; padding: 60px 0;
+          color: rgba(255,255,255,0.2); font-size: 14px;
+        }
+      `}</style>
+
+      <div className="up-page">
+        <div className="up-glow" />
+        <div className="up-inner">
+          <div className="up-profile-card">
+            <div className="up-avatar">
+              {profile.avatar_url
+                ? <img src={profile.avatar_url} alt={profile.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                : initials
+              }
+            </div>
+            <div>
+              <h1 className="up-name">{profile.name}</h1>
+              <p className="up-email">{profile.email}</p>
+              <span className="up-badge">
+                <svg width="10" height="10" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                </svg>
+                {posts.length} {posts.length === 1 ? 'post' : 'posts'}
+              </span>
+            </div>
+          </div>
+
+          <p className="up-section-title">Posts by {profile.name}</p>
+
+          {posts.length === 0 ? (
+            <div className="up-empty">No posts yet.</div>
+          ) : (
+            posts.map((post) => (
+              <PostCard
+                key={post.id}
+                post={{ ...post, author_name: profile.name, author_avatar: profile.avatar_url }}
+                onDelete={handleDelete}
+              />
+            ))
+          )}
+        </div>
+      </div>
+    </>
   );
 }

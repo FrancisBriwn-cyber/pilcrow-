@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
@@ -40,59 +40,126 @@ export default function SinglePost() {
   }
 
   if (loading) return <LoadingSpinner />;
+
   if (error) return (
-    <div className="container" style={{ paddingTop: '40px' }}>
-      <div className="alert alert-error">{error}</div>
-      <Link to="/" className="btn btn-outline">← Back to feed</Link>
-    </div>
+    <>
+      <style>{`.sp-page{min-height:100vh;background:#080808;padding:100px 16px 60px;}`}</style>
+      <div className="sp-page">
+        <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+          <div className="alert alert-error">{error}</div>
+          <Link to="/" className="btn btn-outline">← Back to feed</Link>
+        </div>
+      </div>
+    </>
   );
 
   const isOwner = user && user.id === post.user_id;
 
   return (
-    <div className="container" style={{ paddingTop: '32px', paddingBottom: '40px' }}>
-      <Link to="/" style={{ color: 'var(--text-muted)', fontSize: '14px', display: 'inline-block', marginBottom: '20px' }}>
-        ← Back to feed
-      </Link>
+    <>
+      <style>{`
+        .sp-page {
+          min-height: 100vh;
+          background: #080808;
+          padding: 100px 16px 60px;
+          position: relative;
+        }
+        .sp-glow {
+          position: absolute; width: 700px; height: 300px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+          top: 0; left: 50%; transform: translateX(-50%);
+          pointer-events: none;
+        }
+        .sp-inner { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+        .sp-back {
+          display: inline-flex; align-items: center; gap: 6px;
+          font-size: 13px; color: rgba(255,255,255,0.35);
+          margin-bottom: 28px; transition: color 0.15s;
+        }
+        .sp-back:hover { color: rgba(255,255,255,0.7); }
+        .sp-article {
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 16px; padding: 40px;
+        }
+        .sp-author-row {
+          display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
+        }
+        .sp-avatar {
+          width: 44px; height: 44px; border-radius: 50%;
+          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          color: #fff; display: flex; align-items: center; justify-content: center;
+          font-weight: 700; font-size: 16px; overflow: hidden; flex-shrink: 0;
+          border: 2px solid rgba(255,255,255,0.1);
+        }
+        .sp-author-name {
+          font-weight: 600; font-size: 14px; color: #fff;
+        }
+        .sp-author-name:hover { color: #818cf8; }
+        .sp-date { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+        .sp-title {
+          font-size: clamp(22px, 4vw, 32px); font-weight: 700; color: #fff;
+          letter-spacing: -0.5px; line-height: 1.25; margin-bottom: 20px;
+        }
+        .sp-content {
+          font-size: 16px; line-height: 1.75; color: rgba(255,255,255,0.72);
+          white-space: pre-wrap; margin-bottom: 28px;
+        }
+        .sp-media {
+          width: 100%; max-height: 500px; object-fit: cover;
+          border-radius: 10px; margin-bottom: 28px;
+          border: 1px solid rgba(255,255,255,0.08);
+        }
+        .sp-owner-actions {
+          display: flex; gap: 10px;
+          border-top: 1px solid rgba(255,255,255,0.07);
+          padding-top: 20px; margin-top: 4px;
+        }
+      `}</style>
 
-      <article style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '32px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-          <Link to={`/users/${post.user_id}`} style={{
-            width: '44px', height: '44px', borderRadius: '50%',
-            background: 'var(--primary)', color: '#fff',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontWeight: 700, fontSize: '16px', overflow: 'hidden', flexShrink: 0
-          }}>
-            {post.author_avatar
-              ? <img src={post.author_avatar} alt={post.author_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              : post.author_name?.charAt(0).toUpperCase()
-            }
+      <div className="sp-page">
+        <div className="sp-glow" />
+        <div className="sp-inner">
+          <Link to="/" className="sp-back">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M15 10H5M10 5l-5 5 5 5"/>
+            </svg>
+            Back to feed
           </Link>
-          <div>
-            <Link to={`/users/${post.user_id}`} style={{ fontWeight: 600 }}>{post.author_name}</Link>
-            <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{formatDate(post.created_at)}</div>
-          </div>
+
+          <article className="sp-article">
+            <div className="sp-author-row">
+              <Link to={`/users/${post.user_id}`} style={{ textDecoration: 'none' }}>
+                <div className="sp-avatar">
+                  {post.author_avatar
+                    ? <img src={post.author_avatar} alt={post.author_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    : post.author_name?.charAt(0).toUpperCase()
+                  }
+                </div>
+              </Link>
+              <div>
+                <Link to={`/users/${post.user_id}`} className="sp-author-name">{post.author_name}</Link>
+                <div className="sp-date">{formatDate(post.created_at)}</div>
+              </div>
+            </div>
+
+            <h1 className="sp-title">{post.title}</h1>
+
+            <p className="sp-content">{post.content}</p>
+
+            {post.media_url && (
+              <img src={post.media_url} alt="Post media" className="sp-media" />
+            )}
+
+            {isOwner && (
+              <div className="sp-owner-actions">
+                <button className="btn btn-outline" onClick={() => navigate(`/posts/${id}/edit`)}>Edit Post</button>
+                <button className="btn btn-danger" onClick={handleDelete}>Delete Post</button>
+              </div>
+            )}
+          </article>
         </div>
-
-        <h1 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '16px' }}>{post.title}</h1>
-
-        <p style={{ fontSize: '16px', lineHeight: '1.7', color: '#374151', marginBottom: '20px', whiteSpace: 'pre-wrap' }}>
-          {post.content}
-        </p>
-
-        {post.media_url && (
-          <img src={post.media_url} alt="Post media"
-            style={{ width: '100%', maxHeight: '500px', objectFit: 'cover', borderRadius: '6px', marginBottom: '20px' }}
-          />
-        )}
-
-        {isOwner && (
-          <div style={{ display: 'flex', gap: '10px', borderTop: '1px solid var(--border)', paddingTop: '16px' }}>
-            <button className="btn btn-outline" onClick={() => navigate(`/posts/${id}/edit`)}>Edit Post</button>
-            <button className="btn btn-danger" onClick={handleDelete}>Delete Post</button>
-          </div>
-        )}
-      </article>
-    </div>
+      </div>
+    </>
   );
 }
