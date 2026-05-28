@@ -47,7 +47,12 @@ export default function SinglePost() {
       <div className="sp-page">
         <div style={{ maxWidth: '720px', margin: '0 auto' }}>
           <div className="alert alert-error">{error}</div>
-          <Link to="/" className="btn btn-outline">← Back to feed</Link>
+          <Link to="/" className="btn btn-outline">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M15 10H5M10 5l-5 5 5 5"/>
+            </svg>
+            Back to feed
+          </Link>
         </div>
       </div>
     </>

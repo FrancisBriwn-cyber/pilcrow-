@@ -271,9 +271,20 @@ export default function Feed() {
         {error && <div style={{ maxWidth: '1200px', margin: '0 auto' }}><div className="alert alert-error">{error}</div></div>}
 
         {!loading && !error && posts.length === 0 && (
-          <p style={{ color: 'rgba(255,255,255,0.25)', textAlign: 'center', padding: '60px 0' }}>
-            No posts yet. Be the first!
-          </p>
+          <div style={{ textAlign: 'center', padding: '80px 0', color: 'rgba(255,255,255,0.22)' }}>
+            <div style={{
+              width: '56px', height: '56px', margin: '0 auto 18px',
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.07)',
+              borderRadius: '14px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center'
+            }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="1.8" strokeLinecap="round">
+                <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+              </svg>
+            </div>
+            <p style={{ fontSize: '15px' }}>No posts yet. Be the first to write one!</p>
+          </div>
         )}
 
         {!loading && !error && posts.length > 0 && (

@@ -88,7 +88,14 @@ export default function UserProfile() {
         }
         .up-empty {
           text-align: center; padding: 60px 0;
-          color: rgba(255,255,255,0.2); font-size: 14px;
+          color: rgba(255,255,255,0.22); font-size: 14px;
+        }
+        .up-empty-icon {
+          width: 52px; height: 52px; margin: 0 auto 16px;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: 14px;
+          display: flex; align-items: center; justify-content: center;
         }
       `}</style>
 
@@ -117,7 +124,14 @@ export default function UserProfile() {
           <p className="up-section-title">Posts by {profile.name}</p>
 
           {posts.length === 0 ? (
-            <div className="up-empty">No posts yet.</div>
+            <div className="up-empty">
+              <div className="up-empty-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="1.8" strokeLinecap="round">
+                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                </svg>
+              </div>
+              No posts yet.
+            </div>
           ) : (
             posts.map((post) => (
               <PostCard

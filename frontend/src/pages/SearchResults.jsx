@@ -61,7 +61,11 @@ export default function SearchResults() {
           color: rgba(255,255,255,0.25); font-size: 15px;
         }
         .sr-empty-icon {
-          font-size: 40px; margin-bottom: 14px; opacity: 0.3;
+          width: 52px; height: 52px; margin: 0 auto 18px;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 14px;
+          display: flex; align-items: center; justify-content: center;
         }
       `}</style>
 
@@ -85,7 +89,12 @@ export default function SearchResults() {
 
           {!loading && !error && posts.length === 0 && query && (
             <div className="sr-empty">
-              <div className="sr-empty-icon">¶</div>
+              <div className="sr-empty-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.8" strokeLinecap="round">
+                  <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/>
+                  <path d="M8 11h6M11 8v6" strokeWidth="1.5" opacity="0.5"/>
+                </svg>
+              </div>
               <p>No posts found for "{query}"</p>
               <p style={{ fontSize: '13px', marginTop: '6px', color: 'rgba(255,255,255,0.18)' }}>Try a different keyword</p>
             </div>
