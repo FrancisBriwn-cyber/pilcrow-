@@ -138,16 +138,17 @@ export default function Feed() {
           50%{transform:translateX(-50%) translateY(6px)}
         }
 
-        .feed-section { background: #f9fafb; min-height: 60vh; padding: 56px 16px 60px; }
+        .feed-section { background: #080808; min-height: 60vh; padding: 56px 16px 80px; border-top: 1px solid rgba(255,255,255,0.06); }
         .feed-header {
-          max-width: 720px; margin: 0 auto 32px;
+          max-width: 720px; margin: 0 auto 28px;
           display: flex; align-items: center; justify-content: space-between;
           flex-wrap: wrap; gap: 12px;
         }
-        .feed-title { font-size: 22px; font-weight: 700; color: #111; letter-spacing: -0.5px; }
+        .feed-title { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.4px; }
         .feed-count {
-          font-size: 13px; color: #6b7280;
-          background: #e5e7eb; padding: 4px 10px; border-radius: 100px;
+          font-size: 12px; color: rgba(255,255,255,0.4);
+          background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.08);
+          padding: 3px 10px; border-radius: 100px;
         }
       `}</style>
 

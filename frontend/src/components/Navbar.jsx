@@ -7,15 +7,11 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [query, setQuery] = useState('');
-  const [searchOpen, setSearchOpen] = useState(false);
-
-  const onHome = location.pathname === '/';
 
   function handleSearch(e) {
     e.preventDefault();
     if (query.trim()) {
       navigate(`/search?q=${encodeURIComponent(query.trim())}`);
-      setSearchOpen(false);
       setQuery('');
     }
   }
@@ -28,11 +24,10 @@ export default function Navbar() {
           height: 60px;
           display: flex; align-items: center;
           padding: 0 40px;
-          transition: background 0.3s, border-color 0.3s, backdrop-filter 0.3s;
-          background: ${onHome ? 'rgba(8,8,8,0.6)' : 'rgba(255,255,255,0.92)'};
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
-          border-bottom: 1px solid ${onHome ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)'};
+          background: rgba(8,8,8,0.75);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border-bottom: 1px solid rgba(255,255,255,0.07);
         }
         .nav-inner {
           display: flex; align-items: center;
@@ -41,13 +36,11 @@ export default function Navbar() {
           margin: 0 auto; gap: 20px;
         }
 
-        /* Logo */
         .nav-logo {
           display: flex; align-items: center; gap: 7px;
           text-decoration: none; flex-shrink: 0;
           font-size: 16px; font-weight: 700;
-          letter-spacing: -0.4px;
-          color: ${onHome ? '#fff' : '#0f0f0f'};
+          letter-spacing: -0.4px; color: #fff;
           transition: opacity 0.15s;
         }
         .nav-logo:hover { opacity: 0.75; }
@@ -55,11 +48,9 @@ export default function Navbar() {
           width: 26px; height: 26px; border-radius: 7px;
           background: linear-gradient(135deg, #6366f1, #8b5cf6);
           display: flex; align-items: center; justify-content: center;
-          font-size: 13px; font-weight: 800; color: #fff;
-          flex-shrink: 0;
+          font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0;
         }
 
-        /* Center links */
         .nav-links {
           display: flex; align-items: center; gap: 2px;
           flex: 1; justify-content: center;
@@ -69,49 +60,43 @@ export default function Navbar() {
           font-size: 13.5px; font-weight: 500;
           padding: 7px 14px; border-radius: 10px;
           transition: background 0.15s, color 0.15s;
-          color: ${onHome ? 'rgba(255,255,255,0.55)' : '#6b7280'};
+          color: rgba(255,255,255,0.5);
           white-space: nowrap;
         }
         .nav-link:hover {
-          background: ${onHome ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'};
-          color: ${onHome ? '#fff' : '#111'};
+          background: rgba(255,255,255,0.07);
+          color: #fff;
         }
         .nav-link.active {
-          color: ${onHome ? '#fff' : '#111'};
-          background: ${onHome ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)'};
+          color: #fff;
+          background: rgba(255,255,255,0.09);
         }
 
-        /* Search */
         .nav-search-form {
-          display: flex; align-items: center; gap: 0;
-          background: ${onHome ? 'rgba(255,255,255,0.08)' : '#f3f4f6'};
-          border: 1px solid ${onHome ? 'rgba(255,255,255,0.1)' : 'transparent'};
+          display: flex; align-items: center;
+          background: rgba(255,255,255,0.07);
+          border: 1px solid rgba(255,255,255,0.09);
           border-radius: 10px; overflow: hidden;
           transition: border-color 0.2s, background 0.2s;
           max-width: 220px;
         }
         .nav-search-form:focus-within {
-          border-color: ${onHome ? 'rgba(255,255,255,0.25)' : '#6366f1'};
-          background: ${onHome ? 'rgba(255,255,255,0.12)' : '#fff'};
+          border-color: rgba(99,102,241,0.5);
+          background: rgba(99,102,241,0.08);
         }
         .nav-search-input {
           background: transparent; border: none; outline: none;
           font-size: 13px; font-family: inherit;
-          padding: 8px 12px; width: 150px;
-          color: ${onHome ? '#fff' : '#111'};
+          padding: 8px 12px; width: 150px; color: #fff;
         }
-        .nav-search-input::placeholder {
-          color: ${onHome ? 'rgba(255,255,255,0.3)' : '#9ca3af'};
-        }
+        .nav-search-input::placeholder { color: rgba(255,255,255,0.25); }
         .nav-search-btn {
           background: none; border: none; cursor: pointer;
           padding: 8px 10px; display: flex; align-items: center;
-          color: ${onHome ? 'rgba(255,255,255,0.4)' : '#9ca3af'};
-          transition: color 0.15s;
+          color: rgba(255,255,255,0.35); transition: color 0.15s;
         }
-        .nav-search-btn:hover { color: ${onHome ? '#fff' : '#6366f1'}; }
+        .nav-search-btn:hover { color: #fff; }
 
-        /* Right actions */
         .nav-actions {
           display: flex; align-items: center; gap: 8px; flex-shrink: 0;
         }
@@ -119,18 +104,12 @@ export default function Navbar() {
           background: none; border: none; cursor: pointer;
           font-size: 13.5px; font-weight: 500; font-family: inherit;
           padding: 7px 14px; border-radius: 10px;
-          text-decoration: none;
-          color: ${onHome ? 'rgba(255,255,255,0.6)' : '#6b7280'};
-          transition: background 0.15s, color 0.15s;
-          white-space: nowrap;
+          text-decoration: none; color: rgba(255,255,255,0.55);
+          transition: background 0.15s, color 0.15s; white-space: nowrap;
         }
-        .nav-ghost:hover {
-          background: ${onHome ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'};
-          color: ${onHome ? '#fff' : '#111'};
-        }
+        .nav-ghost:hover { background: rgba(255,255,255,0.07); color: #fff; }
         .nav-solid {
-          background: ${onHome ? '#fff' : '#0f0f0f'};
-          color: ${onHome ? '#0f0f0f' : '#fff'};
+          background: #fff; color: #0f0f0f;
           border: none; cursor: pointer;
           font-size: 13.5px; font-weight: 600; font-family: inherit;
           padding: 7px 18px; border-radius: 10px;
@@ -141,35 +120,31 @@ export default function Navbar() {
         .nav-solid:hover  { opacity: 0.85; }
         .nav-solid:active { transform: scale(0.97); }
 
-        /* Avatar */
         .nav-avatar {
           width: 30px; height: 30px; border-radius: 50%;
           background: linear-gradient(135deg, #6366f1, #8b5cf6);
           color: #fff; font-size: 12px; font-weight: 700;
           display: flex; align-items: center; justify-content: center;
           text-decoration: none; overflow: hidden; flex-shrink: 0;
-          border: 2px solid ${onHome ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'};
+          border: 2px solid rgba(255,255,255,0.15);
           transition: border-color 0.15s, transform 0.15s;
         }
         .nav-avatar:hover { border-color: #6366f1; transform: scale(1.05); }
 
         .nav-sep {
           width: 1px; height: 20px;
-          background: ${onHome ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'};
-          margin: 0 2px;
+          background: rgba(255,255,255,0.09); margin: 0 2px;
         }
       `}</style>
 
       <nav className="nav">
         <div className="nav-inner">
 
-          {/* Logo */}
           <Link to="/" className="nav-logo">
             <div className="nav-logo-icon">¶</div>
             Pilcrow
           </Link>
 
-          {/* Center nav links */}
           <div className="nav-links">
             <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>Home</Link>
             <Link to="/#feed" className="nav-link">Posts</Link>
@@ -178,7 +153,6 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Search */}
           <form onSubmit={handleSearch} className="nav-search-form">
             <input
               className="nav-search-input"
@@ -193,7 +167,6 @@ export default function Navbar() {
             </button>
           </form>
 
-          {/* Right actions */}
           <div className="nav-actions">
             {user ? (
               <>
