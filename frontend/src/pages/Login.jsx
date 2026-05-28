@@ -161,7 +161,7 @@ export default function Login() {
         .reg-brand-side {
           flex: 1; background: #07060f; position: relative; overflow: hidden;
           display: flex; flex-direction: column; justify-content: space-between;
-          padding: 56px 60px;
+          padding: 100px 60px 56px;
         }
         .reg-brand-glow-1 {
           position: absolute; width: 600px; height: 600px; border-radius: 50%;
