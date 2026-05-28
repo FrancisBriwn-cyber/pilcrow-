@@ -88,8 +88,11 @@ export default function SinglePost() {
           border-radius: 16px; padding: 40px;
         }
         .sp-author-row {
-          display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
+          display: flex; align-items: center;
+          justify-content: space-between;
+          gap: 12px; margin-bottom: 28px;
         }
+        .sp-author-left { display: flex; align-items: center; gap: 12px; }
         .sp-avatar {
           width: 44px; height: 44px; border-radius: 50%;
           background: linear-gradient(135deg, #6366f1, #8b5cf6);
@@ -97,11 +100,42 @@ export default function SinglePost() {
           font-weight: 700; font-size: 16px; overflow: hidden; flex-shrink: 0;
           border: 2px solid rgba(255,255,255,0.1);
         }
-        .sp-author-name {
-          font-weight: 600; font-size: 14px; color: #fff;
-        }
+        .sp-author-name { font-weight: 600; font-size: 14px; color: #fff; }
         .sp-author-name:hover { color: #818cf8; }
         .sp-date { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+
+        .sp-owner-btns {
+          display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+        }
+        .sp-btn-edit {
+          display: inline-flex; align-items: center; gap: 6px;
+          padding: 7px 14px; border-radius: 10px;
+          font-size: 13px; font-weight: 500; font-family: inherit;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.1);
+          color: rgba(255,255,255,0.7); cursor: pointer;
+          transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+        .sp-btn-edit:hover {
+          background: rgba(99,102,241,0.15);
+          border-color: rgba(99,102,241,0.35);
+          color: #a5b4fc;
+        }
+        .sp-btn-delete {
+          display: inline-flex; align-items: center; gap: 6px;
+          padding: 7px 14px; border-radius: 10px;
+          font-size: 13px; font-weight: 500; font-family: inherit;
+          background: rgba(239,68,68,0.08);
+          border: 1px solid rgba(239,68,68,0.18);
+          color: rgba(248,113,113,0.8); cursor: pointer;
+          transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+        .sp-btn-delete:hover {
+          background: rgba(239,68,68,0.18);
+          border-color: rgba(239,68,68,0.35);
+          color: #f87171;
+        }
+
         .sp-title {
           font-size: clamp(22px, 4vw, 32px); font-weight: 700; color: #fff;
           letter-spacing: -0.5px; line-height: 1.25; margin-bottom: 20px;
@@ -114,11 +148,6 @@ export default function SinglePost() {
           width: 100%; max-height: 500px; object-fit: cover;
           border-radius: 10px; margin-bottom: 28px;
           border: 1px solid rgba(255,255,255,0.08);
-        }
-        .sp-owner-actions {
-          display: flex; gap: 10px;
-          border-top: 1px solid rgba(255,255,255,0.07);
-          padding-top: 20px; margin-top: 4px;
         }
       `}</style>
 
@@ -134,18 +163,37 @@ export default function SinglePost() {
 
           <article className="sp-article">
             <div className="sp-author-row">
-              <Link to={`/users/${post.user_id}`} style={{ textDecoration: 'none' }}>
-                <div className="sp-avatar">
-                  {post.author_avatar
-                    ? <img src={post.author_avatar} alt={post.author_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    : post.author_name?.charAt(0).toUpperCase()
-                  }
+              <div className="sp-author-left">
+                <Link to={`/users/${post.user_id}`} style={{ textDecoration: 'none' }}>
+                  <div className="sp-avatar">
+                    {post.author_avatar
+                      ? <img src={post.author_avatar} alt={post.author_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      : post.author_name?.charAt(0).toUpperCase()
+                    }
+                  </div>
+                </Link>
+                <div>
+                  <Link to={`/users/${post.user_id}`} className="sp-author-name">{post.author_name}</Link>
+                  <div className="sp-date">{formatDate(post.created_at)}</div>
                 </div>
-              </Link>
-              <div>
-                <Link to={`/users/${post.user_id}`} className="sp-author-name">{post.author_name}</Link>
-                <div className="sp-date">{formatDate(post.created_at)}</div>
               </div>
+
+              {isOwner && (
+                <div className="sp-owner-btns">
+                  <button className="sp-btn-edit" onClick={() => navigate(`/posts/${id}/edit`)}>
+                    <svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                    </svg>
+                    Edit
+                  </button>
+                  <button className="sp-btn-delete" onClick={handleDelete}>
+                    <svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M3 6h14M8 6V4h4v2M19 6l-1 12a2 2 0 01-2 2H4a2 2 0 01-2-2L1 6"/>
+                    </svg>
+                    Delete
+                  </button>
+                </div>
+              )}
             </div>
 
             <h1 className="sp-title">{post.title}</h1>
@@ -154,13 +202,6 @@ export default function SinglePost() {
 
             {post.media_url && (
               <img src={post.media_url} alt="Post media" className="sp-media" />
-            )}
-
-            {isOwner && (
-              <div className="sp-owner-actions">
-                <button className="btn btn-outline" onClick={() => navigate(`/posts/${id}/edit`)}>Edit Post</button>
-                <button className="btn btn-danger" onClick={handleDelete}>Delete Post</button>
-              </div>
             )}
           </article>
         </div>
