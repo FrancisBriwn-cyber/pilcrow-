@@ -1,5 +1,7 @@
-import { Routes, Route } from 'react-router-dom';
+﻿import { Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import Feed from './pages/Feed';
 import SinglePost from './pages/SinglePost';
@@ -13,7 +15,7 @@ import OAuthCallback from './pages/OAuthCallback';
 
 export default function App() {
   return (
-    <>
+    <ThemeProvider>
       <Navbar />
       <main style={{ minHeight: '100vh' }}>
         <Routes>
@@ -32,6 +34,7 @@ export default function App() {
           } />
         </Routes>
       </main>
-    </>
+      <Footer />
+    </ThemeProvider>
   );
 }

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+﻿import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 
@@ -44,25 +44,26 @@ export default function PostCard({ post, onDelete, featured = false }) {
             transition: border-color 0.2s, transform 0.2s;
             grid-column: 1 / -1;
           }
-          .pc-feat:hover { border-color: rgba(99,102,241,0.4); transform: translateY(-2px); }
+          .pc-feat:hover { border-color: rgba(13,148,136,0.4); transform: translateY(-2px); }
           .pc-feat-body {
             padding: 40px 44px;
             display: flex; flex-direction: column; justify-content: space-between;
           }
           .pc-feat-tag {
             display: inline-flex; align-items: center; gap: 5px;
-            background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25);
+            background: rgba(13,148,136,0.12); border: 1px solid rgba(13,148,136,0.25);
             border-radius: 100px; padding: 4px 12px;
-            font-size: 11px; font-weight: 600; color: #a5b4fc;
+            font-size: 11px; font-weight: 600; color: #5eead4;
             letter-spacing: 0.5px; text-transform: uppercase;
             margin-bottom: 18px; width: fit-content;
           }
           .pc-feat-title {
             font-size: clamp(20px, 2.5vw, 28px); font-weight: 800;
-            color: #fff; letter-spacing: -0.5px; line-height: 1.25;
-            margin-bottom: 14px; transition: color 0.15s;
+            background: linear-gradient(135deg, #0d9488, #14b8a6, #2dd4bf);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px; line-height: 1.25; margin-bottom: 14px;
           }
-          .pc-feat-title:hover { color: #a5b4fc; }
           .pc-feat-excerpt {
             font-size: 14.5px; color: rgba(255,255,255,0.45);
             line-height: 1.7; margin-bottom: 28px;
@@ -75,7 +76,7 @@ export default function PostCard({ post, onDelete, featured = false }) {
           .pc-feat-author-row { display: flex; align-items: center; gap: 10px; }
           .pc-feat-avatar {
             width: 36px; height: 36px; border-radius: 50%;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            background: linear-gradient(135deg, #0d9488, #0f766e);
             color: #fff; display: flex; align-items: center; justify-content: center;
             font-weight: 700; font-size: 13px; overflow: hidden; flex-shrink: 0;
             border: 2px solid rgba(255,255,255,0.1);
@@ -195,13 +196,14 @@ export default function PostCard({ post, onDelete, featured = false }) {
         }
         .pc-title-link { text-decoration: none; }
         .pc-title {
-          font-size: 16px; font-weight: 700; color: #fff;
+          font-size: 16px; font-weight: 700;
+          background: linear-gradient(135deg, #0d9488, #14b8a6);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text;
           letter-spacing: -0.2px; line-height: 1.4; margin-bottom: 10px;
           display: -webkit-box; -webkit-line-clamp: 2;
           -webkit-box-orient: vertical; overflow: hidden;
-          transition: color 0.15s;
         }
-        .pc-title:hover { color: #a5b4fc; }
         .pc-excerpt {
           font-size: 13px; color: rgba(255,255,255,0.38);
           line-height: 1.65; flex: 1;
@@ -217,7 +219,7 @@ export default function PostCard({ post, onDelete, featured = false }) {
         .pc-author-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
         .pc-avatar {
           width: 28px; height: 28px; border-radius: 50%;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          background: linear-gradient(135deg, #0d9488, #0f766e);
           color: #fff; display: flex; align-items: center; justify-content: center;
           font-weight: 600; font-size: 11px; flex-shrink: 0; overflow: hidden;
           border: 1.5px solid rgba(255,255,255,0.1);
@@ -228,7 +230,7 @@ export default function PostCard({ post, onDelete, featured = false }) {
           white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
           transition: color 0.15s; display: block;
         }
-        .pc-author:hover { color: #818cf8; }
+        .pc-author:hover { color: #14b8a6; }
         .pc-meta { font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 1px; white-space: nowrap; }
         .pc-read-btn {
           display: inline-flex; align-items: center; gap: 4px;
@@ -236,7 +238,7 @@ export default function PostCard({ post, onDelete, featured = false }) {
           white-space: nowrap; flex-shrink: 0;
           transition: color 0.15s; text-decoration: none;
         }
-        .pc-read-btn:hover { color: #818cf8; }
+        .pc-read-btn:hover { color: #14b8a6; }
         .pc-owner-actions { display: flex; gap: 5px; }
       `}</style>
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
@@ -14,6 +14,7 @@ export default function EditPost() {
   const [preview, setPreview] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -35,6 +36,18 @@ export default function EditPost() {
   function handleFile(e) {
     const f = e.target.files[0];
     if (f) { setFile(f); setPreview(URL.createObjectURL(f)); }
+  }
+
+  async function handleDelete() {
+    if (!window.confirm('Permanently delete this post? This cannot be undone.')) return;
+    setDeleting(true);
+    try {
+      await api.delete(`/api/posts/${id}`);
+      navigate('/');
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to delete post.');
+      setDeleting(false);
+    }
   }
 
   async function handleSubmit(e) {
@@ -70,7 +83,7 @@ export default function EditPost() {
         }
         .editor-glow {
           position: absolute; width: 600px; height: 300px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%);
+          background: radial-gradient(circle, rgba(13,148,136,0.1) 0%, transparent 70%);
           top: 0; left: 50%; transform: translateX(-50%);
           pointer-events: none;
         }
@@ -99,7 +112,22 @@ export default function EditPost() {
           border-radius: 10px; margin-bottom: 16px;
           border: 1px solid rgba(255,255,255,0.08);
         }
-        .editor-actions { display: flex; gap: 10px; padding-top: 4px; }
+        .editor-actions { display: flex; gap: 10px; padding-top: 4px; flex-wrap: wrap; }
+        .editor-actions-right { margin-left: auto; }
+        .btn-delete-post {
+          display: inline-flex; align-items: center; gap: 6px;
+          padding: 9px 18px; border-radius: 12px;
+          font-size: 14px; font-weight: 600; font-family: inherit;
+          background: rgba(239,68,68,0.08);
+          border: 1px solid rgba(239,68,68,0.2);
+          color: #f87171; cursor: pointer;
+          transition: background 0.15s, border-color 0.15s;
+        }
+        .btn-delete-post:hover:not(:disabled) {
+          background: rgba(239,68,68,0.18);
+          border-color: rgba(239,68,68,0.35);
+        }
+        .btn-delete-post:disabled { opacity: 0.5; cursor: not-allowed; }
       `}</style>
 
       <div className="editor-page">
@@ -139,12 +167,20 @@ export default function EditPost() {
               )}
 
               <div className="editor-actions">
-                <button type="submit" className="btn btn-primary" disabled={saving}>
+                <button type="submit" className="btn btn-primary" disabled={saving || deleting}>
                   {saving ? 'Saving…' : 'Save Changes'}
                 </button>
-                <button type="button" className="btn btn-outline" onClick={() => navigate(`/posts/${id}`)}>
+                <button type="button" className="btn btn-outline" onClick={() => navigate(`/posts/${id}`)} disabled={saving || deleting}>
                   Cancel
                 </button>
+                <div className="editor-actions-right">
+                  <button type="button" className="btn-delete-post" onClick={handleDelete} disabled={deleting || saving}>
+                    <svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M3 6h14M8 6V4h4v2M19 6l-1 12a2 2 0 01-2 2H4a2 2 0 01-2-2L1 6"/>
+                    </svg>
+                    {deleting ? 'Deleting…' : 'Delete Post'}
+                  </button>
+                </div>
               </div>
             </form>
           </div>

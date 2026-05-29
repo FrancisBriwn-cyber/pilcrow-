@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import PostCard from '../components/PostCard';
@@ -44,7 +44,7 @@ export default function Feed() {
         }
         .hero-glow-2 {
           position: absolute; width: 400px; height: 400px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%);
+          background: radial-gradient(circle, rgba(13,148,136,0.12) 0%, transparent 70%);
           bottom: 60px; right: 10%; pointer-events: none;
         }
         .hero-glow-3 {
@@ -86,7 +86,7 @@ export default function Feed() {
           position: relative;
         }
         .hero-headline-accent {
-          background: linear-gradient(135deg, #a78bfa 0%, #818cf8 50%, #67e8f9 100%);
+          background: linear-gradient(135deg, #0d9488 0%, #14b8a6 50%, #2dd4bf 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
           background-clip: text;
         }
@@ -144,7 +144,12 @@ export default function Feed() {
           display: flex; align-items: center; justify-content: space-between;
           flex-wrap: wrap; gap: 12px;
         }
-        .feed-title { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.4px; }
+        .feed-title {
+          font-size: 20px; font-weight: 700; letter-spacing: -0.4px;
+          background: linear-gradient(135deg, #0d9488, #14b8a6);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
         .feed-count {
           font-size: 12px; color: rgba(255,255,255,0.4);
           background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.08);

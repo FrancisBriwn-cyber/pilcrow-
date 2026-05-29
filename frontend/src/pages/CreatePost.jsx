@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 
@@ -53,7 +53,7 @@ export default function CreatePost() {
         }
         .editor-glow {
           position: absolute; width: 600px; height: 300px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%);
+          background: radial-gradient(circle, rgba(13,148,136,0.1) 0%, transparent 70%);
           top: 0; left: 50%; transform: translateX(-50%);
           pointer-events: none;
         }

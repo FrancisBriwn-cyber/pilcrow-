@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import api from '../api/axios';
 import PostCard from '../components/PostCard';
@@ -36,7 +36,7 @@ export default function SearchResults() {
         }
         .sr-glow {
           position: absolute; width: 600px; height: 250px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(99,102,241,0.09) 0%, transparent 70%);
+          background: radial-gradient(circle, rgba(13,148,136,0.09) 0%, transparent 70%);
           top: 0; left: 50%; transform: translateX(-50%);
           pointer-events: none;
         }
@@ -47,14 +47,17 @@ export default function SearchResults() {
           margin-bottom: 10px;
         }
         .sr-title {
-          font-size: 26px; font-weight: 700; color: #fff;
+          font-size: 26px; font-weight: 700;
+          background: linear-gradient(135deg, #fbbf24, #f97316);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text;
           letter-spacing: -0.4px; margin-bottom: 6px;
         }
         .sr-query-badge {
           display: inline-flex; align-items: center; gap: 6px;
-          background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25);
+          background: rgba(13,148,136,0.12); border: 1px solid rgba(13,148,136,0.25);
           border-radius: 100px; padding: 4px 12px;
-          font-size: 13px; color: #a5b4fc; margin-bottom: 28px;
+          font-size: 13px; color: #5eead4; margin-bottom: 28px;
         }
         .sr-empty {
           text-align: center; padding: 80px 0;

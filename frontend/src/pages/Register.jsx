@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
@@ -57,7 +57,7 @@ export default function Register() {
         .reg-form-side::before {
           content: '';
           position: absolute; width: 420px; height: 420px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 65%);
+          background: radial-gradient(circle, rgba(13,148,136,0.1) 0%, transparent 65%);
           top: -140px; right: -80px; pointer-events: none;
         }
         .reg-top-nav {
@@ -70,20 +70,21 @@ export default function Register() {
         }
         .reg-logo:hover { opacity: 0.8; }
         .reg-logo-icon {
-          width: 40px; height: 40px; border-radius: 12px;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          width: 38px; height: 38px; border-radius: 10px;
+          background: linear-gradient(145deg, #0d9488 0%, #0f766e 60%, #2dd4bf 100%);
           display: flex; align-items: center; justify-content: center;
-          font-size: 19px; font-weight: 900; color: #fff;
-          box-shadow: 0 4px 16px rgba(99,102,241,0.45);
+          box-shadow: 0 2px 12px rgba(13,148,136,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+          flex-shrink: 0;
         }
         .reg-logo-text {
-          font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -0.3px;
+          font-size: 19px; font-weight: 800; color: #fff;
+          letter-spacing: -0.4px;
         }
         .reg-login-link {
           font-size: 13px; color: rgba(255,255,255,0.35);
         }
-        .reg-login-link a { color: #818cf8; font-weight: 500; }
-        .reg-login-link a:hover { color: #a5b4fc; }
+        .reg-login-link a { color: #14b8a6; font-weight: 500; }
+        .reg-login-link a:hover { color: #5eead4; }
 
         .reg-form-body {
           position: relative; z-index: 1;
@@ -92,14 +93,14 @@ export default function Register() {
         }
         .reg-eyebrow {
           display: inline-flex; align-items: center; gap: 7px;
-          background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.22);
+          background: rgba(13,148,136,0.1); border: 1px solid rgba(13,148,136,0.22);
           border-radius: 100px; padding: 5px 13px;
-          font-size: 11.5px; font-weight: 600; color: #a5b4fc;
+          font-size: 11.5px; font-weight: 600; color: #5eead4;
           letter-spacing: 0.4px; margin-bottom: 20px;
         }
         .reg-eyebrow-dot {
           width: 6px; height: 6px; border-radius: 50%;
-          background: #818cf8; box-shadow: 0 0 8px rgba(129,140,248,0.7);
+          background: #14b8a6; box-shadow: 0 0 8px rgba(129,140,248,0.7);
           animation: pulse-dot 2s infinite;
         }
         @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.4} }
@@ -133,19 +134,19 @@ export default function Register() {
         }
         .reg-input::placeholder { color: rgba(255,255,255,0.2); }
         .reg-input:focus {
-          border-color: rgba(99,102,241,0.6);
-          background: rgba(99,102,241,0.07);
+          border-color: rgba(13,148,136,0.6);
+          background: rgba(13,148,136,0.07);
         }
 
         .reg-submit {
           width: 100%; padding: 13px;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          background: linear-gradient(135deg, #0d9488, #0f766e);
           color: #fff; border: none; cursor: pointer;
           font-size: 14px; font-weight: 700; font-family: inherit;
           border-radius: 11px; margin-top: 6px;
           display: flex; align-items: center; justify-content: center; gap: 8px;
           transition: opacity 0.15s, transform 0.1s;
-          box-shadow: 0 4px 24px rgba(99,102,241,0.35);
+          box-shadow: 0 4px 24px rgba(13,148,136,0.35);
         }
         .reg-submit:hover { opacity: 0.9; transform: translateY(-1px); }
         .reg-submit:active { transform: scale(0.98); }
@@ -202,12 +203,12 @@ export default function Register() {
         }
         .reg-brand-glow-1 {
           position: absolute; width: 600px; height: 600px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(99,102,241,0.22) 0%, transparent 60%);
+          background: radial-gradient(circle, rgba(13,148,136,0.22) 0%, transparent 60%);
           top: -120px; right: -100px; pointer-events: none;
         }
         .reg-brand-glow-2 {
           position: absolute; width: 400px; height: 400px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 60%);
+          background: radial-gradient(circle, rgba(13,148,136,0.15) 0%, transparent 60%);
           bottom: 60px; left: -80px; pointer-events: none;
         }
         .reg-brand-glow-3 {
@@ -217,7 +218,7 @@ export default function Register() {
         }
         .reg-bg-char {
           position: absolute; font-size: 480px; font-weight: 900; line-height: 1;
-          color: rgba(99,102,241,0.04); top: -40px; right: -30px;
+          color: rgba(13,148,136,0.04); top: -40px; right: -30px;
           pointer-events: none; user-select: none;
           font-family: Georgia, serif;
         }
@@ -241,7 +242,7 @@ export default function Register() {
           margin-bottom: 16px;
         }
         .reg-brand-headline-accent {
-          background: linear-gradient(135deg, #a78bfa 0%, #818cf8 50%, #67e8f9 100%);
+          background: linear-gradient(135deg, #2dd4bf 0%, #14b8a6 50%, #67e8f9 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
           background-clip: text;
         }
@@ -260,13 +261,13 @@ export default function Register() {
           transition: border-color 0.2s, background 0.2s;
         }
         .reg-feat-card:hover {
-          border-color: rgba(99,102,241,0.3); background: rgba(99,102,241,0.05);
+          border-color: rgba(13,148,136,0.3); background: rgba(13,148,136,0.05);
         }
         .reg-feat-icon {
           width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
           display: flex; align-items: center; justify-content: center;
         }
-        .reg-feat-icon-1 { background: rgba(99,102,241,0.15); }
+        .reg-feat-icon-1 { background: rgba(13,148,136,0.15); }
         .reg-feat-icon-2 { background: rgba(34,211,238,0.12); }
         .reg-feat-icon-3 { background: rgba(74,222,128,0.12); }
         .reg-feat-text { flex: 1; }
@@ -298,7 +299,13 @@ export default function Register() {
         <div className="reg-form-side">
           <div className="reg-top-nav">
             <Link to="/" className="reg-logo">
-              <div className="reg-logo-icon">¶</div>
+              <div className="reg-logo-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round">
+                  <path d="M15 3H9a5 5 0 000 10h3v8"/>
+                  <path d="M15 3a5 5 0 010 10"/>
+                  <line x1="18" y1="3" x2="18" y2="21"/>
+                </svg>
+              </div>
               <span className="reg-logo-text">Pilcrow</span>
             </Link>
             <span className="reg-login-link">
@@ -411,7 +418,7 @@ export default function Register() {
             <div className="reg-features">
               <div className="reg-feat-card">
                 <div className="reg-feat-icon reg-feat-icon-1">
-                  <svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="#818cf8" strokeWidth="1.8">
+                  <svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="#14b8a6" strokeWidth="1.8">
                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
                   </svg>
                 </div>

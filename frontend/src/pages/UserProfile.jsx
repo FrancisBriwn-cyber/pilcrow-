@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../api/axios';
 import PostCard from '../components/PostCard';
@@ -51,7 +51,7 @@ export default function UserProfile() {
         }
         .up-glow {
           position: absolute; width: 600px; height: 300px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%);
+          background: radial-gradient(circle, rgba(13,148,136,0.1) 0%, transparent 70%);
           top: 0; left: 50%; transform: translateX(-50%);
           pointer-events: none;
         }
@@ -65,21 +65,24 @@ export default function UserProfile() {
         }
         .up-avatar {
           width: 76px; height: 76px; border-radius: 50%;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          background: linear-gradient(135deg, #0d9488, #0f766e);
           color: #fff; display: flex; align-items: center; justify-content: center;
           font-weight: 700; font-size: 28px; overflow: hidden; flex-shrink: 0;
           border: 2px solid rgba(255,255,255,0.1);
         }
         .up-name {
-          font-size: 22px; font-weight: 700; color: #fff;
+          font-size: 22px; font-weight: 700;
+          background: linear-gradient(135deg, #2dd4bf, #06b6d4);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text;
           letter-spacing: -0.3px; margin-bottom: 4px;
         }
         .up-email { font-size: 13px; color: rgba(255,255,255,0.35); margin-bottom: 8px; }
         .up-badge {
           display: inline-flex; align-items: center; gap: 5px;
-          background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);
+          background: rgba(13,148,136,0.1); border: 1px solid rgba(13,148,136,0.2);
           border-radius: 100px; padding: 3px 10px;
-          font-size: 12px; color: #a5b4fc; font-weight: 500;
+          font-size: 12px; color: #5eead4; font-weight: 500;
         }
         .up-section-title {
           font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.5);
@@ -142,6 +145,8 @@ export default function UserProfile() {
             ))
           )}
         </div>
+
+
       </div>
     </>
   );
