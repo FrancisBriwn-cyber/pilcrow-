@@ -12,6 +12,10 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 
 // Google redirects back here after user grants permission
 router.get('/google/callback',
+  (req, res, next) => {
+    console.log('[OAuth callback] query:', JSON.stringify(req.query));
+    next();
+  },
   passport.authenticate('google', { session: false, failureRedirect: `${process.env.CLIENT_URL}/login?error=oauth_failed` }),
   googleCallback
 );
