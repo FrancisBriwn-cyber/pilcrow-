@@ -2,6 +2,7 @@
 require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
 const express = require('express');
 const cors = require('cors');
+const session = require('express-session');
 const passport = require('passport');
 
 const authRoutes = require('./routes/auth');
@@ -23,8 +24,15 @@ app.use(cors({
   credentials: true
 }));
 
+app.use(session({
+  secret: process.env.JWT_SECRET || 'pilcrow_session_secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: process.env.NODE_ENV === 'production', sameSite: 'none', maxAge: 5 * 60 * 1000 }
+}));
 app.use(express.json());
 app.use(passport.initialize());
+app.use(passport.session());
 
 // Apply general rate limit to all API routes
 app.use('/api', generalLimiter);
