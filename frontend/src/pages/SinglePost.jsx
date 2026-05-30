@@ -215,6 +215,14 @@ export default function SinglePost() {
           color: #f87171;
         }
 
+        .sp-category {
+          display: inline-flex; align-items: center;
+          background: rgba(13,148,136,0.1); border: 1px solid rgba(13,148,136,0.22);
+          border-radius: 100px; padding: 4px 12px;
+          font-size: 11px; font-weight: 600; color: #5eead4;
+          letter-spacing: 0.5px; text-transform: uppercase;
+          margin-bottom: 14px;
+        }
         .sp-title {
           font-size: clamp(26px, 4vw, 38px); font-weight: 800;
           background: linear-gradient(135deg, #0d9488, #14b8a6, #2dd4bf);
@@ -223,10 +231,18 @@ export default function SinglePost() {
           letter-spacing: -0.8px; line-height: 1.2; margin-bottom: 24px;
         }
         .sp-content {
-          font-size: 17px; line-height: 1.85; color: rgba(255,255,255,0.92);
-          white-space: pre-wrap; margin-bottom: 28px;
-          font-weight: 400; letter-spacing: 0.1px;
+          font-size: 17px; line-height: 1.85; color: rgba(255,255,255,0.88);
+          margin-bottom: 28px; font-family: Georgia, serif;
         }
+        .sp-content p { margin: 0 0 18px; }
+        .sp-content h2 { font-size: 22px; font-weight: 700; color: #fff; margin: 28px 0 12px; letter-spacing: -0.3px; font-family: inherit; }
+        .sp-content h3 { font-size: 18px; font-weight: 600; color: #fff; margin: 22px 0 10px; font-family: inherit; }
+        .sp-content blockquote { border-left: 3px solid #0d9488; margin: 20px 0; padding: 10px 22px; color: rgba(255,255,255,0.55); font-style: italic; }
+        .sp-content ul, .sp-content ol { padding-left: 26px; margin: 0 0 18px; }
+        .sp-content li { margin-bottom: 6px; }
+        .sp-content strong { color: #fff; font-weight: 700; }
+        .sp-content em { color: rgba(255,255,255,0.75); }
+        .sp-content hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 28px 0; }
         .sp-media {
           width: 100%; max-height: 500px; object-fit: cover;
           border-radius: 10px; margin-bottom: 28px;
@@ -427,13 +443,19 @@ export default function SinglePost() {
               )}
             </div>
 
+            {post.category && post.category !== 'General' && (
+              <div className="sp-category">{post.category}</div>
+            )}
             <h1 className="sp-title">{post.title}</h1>
 
             {post.media_url && (
               <img src={post.media_url} alt="Post media" className="sp-media" />
             )}
 
-            <p className="sp-content">{post.content}</p>
+            <div
+              className="sp-content"
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
 
             {/* Like + Rating bar */}
             <div className="sp-like-bar">

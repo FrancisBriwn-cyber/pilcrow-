@@ -4,6 +4,11 @@ import api from '../api/axios';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useAuth } from '../context/AuthContext';
 
+function readTime(text = '') {
+  const plain = text.replace(/<[^>]+>/g, '');
+  return Math.max(1, Math.ceil(plain.split(/\s+/).length / 200));
+}
+
 export default function Feed() {
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
@@ -469,17 +474,20 @@ export default function Feed() {
               {posts[0] && (
                 <Link to={`/posts/${posts[0].id}`} className="mag-card mag-card-featured">
                   <div>
-                    <div className="mag-tag">Featured</div>
+                    <div className="mag-tag">{posts[0].category || 'Featured'}</div>
                     <div className="mag-title-lg">{posts[0].title}</div>
                   </div>
-                  <div className="mag-author">{posts[0].author_name}</div>
+                  <div className="mag-author">{posts[0].author_name} · {readTime(posts[0].content)} min</div>
                   <div className="mag-deco" />
                 </Link>
               )}
               {posts.slice(1).map(post => (
                 <Link key={post.id} to={`/posts/${post.id}`} className="mag-card">
-                  <div><div className="mag-title">{post.title}</div></div>
-                  <div className="mag-author">{post.author_name}</div>
+                  <div>
+                    {post.category && post.category !== 'General' && <div className="mag-tag" style={{ marginBottom: '6px' }}>{post.category}</div>}
+                    <div className="mag-title">{post.title}</div>
+                  </div>
+                  <div className="mag-author">{post.author_name} · {readTime(post.content)} min</div>
                 </Link>
               ))}
             </div>

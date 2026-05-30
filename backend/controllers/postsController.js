@@ -80,7 +80,7 @@ async function getPostById(req, res) {
 
 // POST /api/posts — create post (authenticated)
 async function createPost(req, res) {
-  const { title, content } = req.body;
+  const { title, content, category } = req.body;
 
   if (!title || !content) {
     return res.status(400).json({ error: 'Title and content are required.' });
@@ -94,8 +94,8 @@ async function createPost(req, res) {
     }
 
     const result = await pool.query(
-      'INSERT INTO posts (user_id, title, content, media_url) VALUES ($1, $2, $3, $4) RETURNING *',
-      [req.user.id, title, content, media_url]
+      'INSERT INTO posts (user_id, title, content, media_url, category) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [req.user.id, title, content, media_url, category || 'General']
     );
 
     const post = result.rows[0];
@@ -115,7 +115,7 @@ async function createPost(req, res) {
 // PUT /api/posts/:id — edit post (owner only)
 async function updatePost(req, res) {
   const { id } = req.params;
-  const { title, content } = req.body;
+  const { title, content, category } = req.body;
 
   if (!title || !content) {
     return res.status(400).json({ error: 'Title and content are required.' });
@@ -127,7 +127,6 @@ async function updatePost(req, res) {
       return res.status(404).json({ error: 'Post not found.' });
     }
 
-    // Enforce ownership on the backend — never trust the frontend alone
     if (existing.rows[0].user_id !== req.user.id) {
       return res.status(403).json({ error: 'Forbidden. You can only edit your own posts.' });
     }
@@ -138,8 +137,8 @@ async function updatePost(req, res) {
     }
 
     const result = await pool.query(
-      'UPDATE posts SET title = $1, content = $2, media_url = $3, updated_at = NOW() WHERE id = $4 RETURNING *',
-      [title, content, media_url, id]
+      'UPDATE posts SET title = $1, content = $2, media_url = $3, category = $4, updated_at = NOW() WHERE id = $5 RETURNING *',
+      [title, content, media_url, category || existing.rows[0].category || 'General', id]
     );
     res.json({ ...result.rows[0], author_name: req.user.name, author_avatar: req.user.avatar_url });
   } catch (err) {

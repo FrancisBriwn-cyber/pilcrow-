@@ -27,8 +27,20 @@ async function migrate() {
       created_at  TIMESTAMP DEFAULT NOW(),
       UNIQUE(post_id, user_id)
     );
+
+    CREATE TABLE IF NOT EXISTS follows (
+      id           SERIAL PRIMARY KEY,
+      follower_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      following_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      created_at   TIMESTAMP DEFAULT NOW(),
+      UNIQUE(follower_id, following_id)
+    );
   `);
-  console.log('Migration complete: likes and comments tables ready.');
+
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS bio TEXT;`);
+  await pool.query(`ALTER TABLE posts ADD COLUMN IF NOT EXISTS category VARCHAR(60) DEFAULT 'General';`);
+
+  console.log('Migration complete: likes, comments, ratings, follows tables ready. bio + category columns added.');
   process.exit(0);
 }
 
