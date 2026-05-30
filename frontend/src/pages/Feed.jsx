@@ -1,7 +1,6 @@
 ﻿import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
-import PostCard from '../components/PostCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useAuth } from '../context/AuthContext';
 
@@ -17,10 +16,6 @@ export default function Feed() {
       .catch(() => setError('Failed to load posts.'))
       .finally(() => setLoading(false));
   }, []);
-
-  function handleDelete(id) {
-    setPosts((prev) => prev.filter((p) => p.id !== id));
-  }
 
   return (
     <>
@@ -155,14 +150,62 @@ export default function Feed() {
           background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.08);
           padding: 3px 10px; border-radius: 100px;
         }
-        .feed-grid {
+        /* Logged-in magazine mosaic */
+        .mag-grid {
           max-width: 1200px; margin: 0 auto;
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 18px;
+          grid-template-columns: repeat(4, 1fr);
+          grid-auto-rows: 160px;
+          gap: 12px;
         }
-        @media (max-width: 900px) { .feed-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 560px) { .feed-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .mag-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 140px; } }
+        @media (max-width: 640px) { .mag-grid { grid-template-columns: 1fr; grid-auto-rows: auto; } }
+
+        .mag-card {
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: 14px; padding: 20px;
+          display: flex; flex-direction: column; justify-content: space-between;
+          overflow: hidden; position: relative;
+          text-decoration: none;
+          transition: border-color 0.2s, background 0.2s, transform 0.2s;
+        }
+        .mag-card:hover { border-color: rgba(13,148,136,0.35); background: rgba(13,148,136,0.04); transform: translateY(-2px); }
+        .mag-card-featured { grid-column: 1 / 3; }
+        @media (max-width: 900px) { .mag-card-featured { grid-column: 1 / 3; } }
+        @media (max-width: 640px) { .mag-card-featured { grid-column: 1; min-height: 140px; } .mag-card { min-height: 110px; } }
+
+        .mag-tag {
+          font-size: 10px; font-weight: 600; letter-spacing: 1px;
+          text-transform: uppercase; color: #5eead4; margin-bottom: 8px;
+        }
+        .mag-title {
+          font-size: 15px; font-weight: 700; color: #fff;
+          line-height: 1.35; letter-spacing: -0.2px;
+          display: -webkit-box; -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical; overflow: hidden; flex: 1;
+        }
+        .mag-title-lg {
+          font-size: 20px; font-weight: 800; color: #fff;
+          line-height: 1.25; letter-spacing: -0.4px;
+          display: -webkit-box; -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical; overflow: hidden; flex: 1;
+        }
+        .mag-author {
+          font-size: 11px; color: rgba(255,255,255,0.3);
+          margin-top: 12px; white-space: nowrap;
+          overflow: hidden; text-overflow: ellipsis;
+        }
+        .mag-deco {
+          position: absolute; bottom: -20px; right: -20px;
+          width: 80px; height: 80px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(13,148,136,0.15) 0%, transparent 70%);
+          pointer-events: none;
+        }
+
+        [data-theme="light"] .mag-card { background: #fdf8f2; border-color: rgba(0,0,0,0.08); }
+        [data-theme="light"] .mag-title, [data-theme="light"] .mag-title-lg { color: #0a0a0a; }
+        [data-theme="light"] .mag-author { color: rgba(0,0,0,0.35); }
 
         /* Guest gate — title mosaic */
         .gate-wrap {
@@ -422,9 +465,34 @@ export default function Feed() {
             )}
 
             {!loading && !error && posts.length > 0 && (
-              <div className="feed-grid">
-                {posts.map((post, i) => (
-                  <PostCard key={post.id} post={post} onDelete={handleDelete} featured={i === 0} />
+              <div className="mag-grid">
+                {posts[0] && (
+                  <Link to={`/posts/${posts[0].id}`} className="mag-card mag-card-featured">
+                    <div>
+                      <div className="mag-tag">Featured</div>
+                      <div className="mag-title-lg">{posts[0].title}</div>
+                    </div>
+                    <div className="mag-author">{posts[0].author_name}</div>
+                    <div className="mag-deco" />
+                  </Link>
+                )}
+                {posts[1] && (
+                  <Link to={`/posts/${posts[1].id}`} className="mag-card">
+                    <div><div className="mag-title">{posts[1].title}</div></div>
+                    <div className="mag-author">{posts[1].author_name}</div>
+                  </Link>
+                )}
+                {posts[2] && (
+                  <Link to={`/posts/${posts[2].id}`} className="mag-card">
+                    <div><div className="mag-title">{posts[2].title}</div></div>
+                    <div className="mag-author">{posts[2].author_name}</div>
+                  </Link>
+                )}
+                {posts.slice(3).map(post => (
+                  <Link key={post.id} to={`/posts/${post.id}`} className="mag-card">
+                    <div><div className="mag-title">{post.title}</div></div>
+                    <div className="mag-author">{post.author_name}</div>
+                  </Link>
                 ))}
               </div>
             )}
