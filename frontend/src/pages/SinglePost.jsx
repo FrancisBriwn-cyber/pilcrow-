@@ -370,6 +370,16 @@ export default function SinglePost() {
           text-align: center; padding: 32px 0;
           color: rgba(255,255,255,0.22); font-size: 14px;
         }
+
+        @media (max-width: 640px) {
+          .sp-page { padding: 90px 12px 48px; }
+          .sp-article { padding: 20px 16px; }
+          .sp-author-row { flex-wrap: wrap; gap: 10px; }
+          .sp-title { font-size: clamp(22px, 6vw, 32px); }
+          .sp-content { font-size: 15px; }
+          .sp-comments { padding: 20px 16px; }
+          .sp-owner-btns { flex-wrap: wrap; }
+        }
       `}</style>
 
       <div className="sp-page">

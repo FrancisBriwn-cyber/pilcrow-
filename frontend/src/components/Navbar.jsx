@@ -10,6 +10,7 @@ export default function Navbar() {
   const location = useLocation();
   const [query, setQuery] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   function handleSearch(e) {
     e.preventDefault();
@@ -180,6 +181,59 @@ export default function Navbar() {
           transition: color 0.15s; flex-shrink: 0;
         }
         .nav-search-close:hover { color: #fff; }
+
+        /* Hamburger — mobile only */
+        .nav-hamburger {
+          display: none;
+          background: none; border: none; cursor: pointer;
+          color: #fff; padding: 4px; flex-shrink: 0;
+          align-items: center; justify-content: center;
+        }
+
+        /* Mobile dropdown menu */
+        .nav-mobile-menu {
+          position: fixed;
+          top: 82px; left: 12px; right: 12px;
+          background: #0d9488;
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 16px;
+          padding: 12px;
+          display: flex; flex-direction: column; gap: 4px;
+          z-index: 199;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .nav-mobile-link {
+          text-decoration: none;
+          font-size: 15px; font-weight: 500;
+          color: rgba(255,255,255,0.85);
+          padding: 12px 16px; border-radius: 10px;
+          transition: background 0.15s, color 0.15s;
+          display: block;
+        }
+        .nav-mobile-link:hover, .nav-mobile-link.active {
+          background: rgba(0,0,0,0.15); color: #fff;
+        }
+        .nav-mobile-sep {
+          height: 1px; background: rgba(255,255,255,0.12);
+          margin: 4px 0;
+        }
+        .nav-mobile-btn {
+          background: none; border: none; cursor: pointer;
+          font-family: inherit; font-size: 15px; font-weight: 500;
+          color: rgba(255,255,255,0.85); padding: 12px 16px;
+          border-radius: 10px; text-align: left; width: 100%;
+          transition: background 0.15s, color 0.15s;
+        }
+        .nav-mobile-btn:hover { background: rgba(0,0,0,0.15); color: #fff; }
+
+        @media (max-width: 640px) {
+          .nav { width: calc(100% - 24px); padding: 0 14px; }
+          .nav-links { display: none; }
+          .nav-hamburger { display: flex; }
+          .nav-text-btn { display: none; }
+          .nav-sep { display: none; }
+          .nav-search-form.open { width: 150px; }
+        }
       `}</style>
 
       <nav className="nav">
@@ -205,6 +259,19 @@ export default function Navbar() {
               <Link to="/posts/new" className={`nav-link${location.pathname === '/posts/new' ? ' active' : ''}`}>Write</Link>
             )}
           </div>
+
+          {/* Hamburger — mobile only */}
+          <button className="nav-hamburger" onClick={() => setMobileOpen(o => !o)} aria-label="Menu">
+            {mobileOpen ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M18 6L6 18M6 6l12 12"/>
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M3 12h18M3 6h18M3 18h18"/>
+              </svg>
+            )}
+          </button>
 
           {/* Right actions */}
           <div className="nav-actions">
@@ -283,6 +350,27 @@ export default function Navbar() {
 
         </div>
       </nav>
+
+      {/* Mobile dropdown */}
+      {mobileOpen && (
+        <div className="nav-mobile-menu" onClick={() => setMobileOpen(false)}>
+          <Link to="/" className={`nav-mobile-link${location.pathname === '/' ? ' active' : ''}`}>Home</Link>
+          <Link to="/#feed" className="nav-mobile-link">Posts</Link>
+          {user && <Link to="/posts/new" className={`nav-mobile-link${location.pathname === '/posts/new' ? ' active' : ''}`}>Write</Link>}
+          <div className="nav-mobile-sep" />
+          {user ? (
+            <>
+              <Link to={`/users/${user.id}`} className="nav-mobile-link">Profile</Link>
+              <button className="nav-mobile-btn" onClick={logout}>Sign out</button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="nav-mobile-link">Log in</Link>
+              <Link to="/register" className="nav-mobile-link">Create account</Link>
+            </>
+          )}
+        </div>
+      )}
     </>
   );
 }

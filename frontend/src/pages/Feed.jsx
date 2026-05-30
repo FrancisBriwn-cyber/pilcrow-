@@ -263,6 +263,27 @@ export default function Feed() {
           box-shadow: 0 0 18px rgba(255,255,255,0.12), inset 0 0 18px rgba(255,255,255,0.06);
         }
 
+        /* Mobile */
+        @media (max-width: 640px) {
+          .hero { padding: 100px 20px 60px; }
+          .hero-node { display: none; }
+          .hero-headline { font-size: clamp(36px, 10vw, 60px); letter-spacing: -1px; }
+          .hero-sub { font-size: 15px; }
+          .hero-ctas { gap: 10px; }
+          .hero-btn-primary, .hero-btn-secondary { padding: 12px 22px; font-size: 13.5px; }
+          .hero-stats { gap: 24px; margin-top: 48px; }
+
+          .feed-section { padding: 48px 16px 72px; }
+          .feed-header { margin-bottom: 20px; }
+
+          /* Mosaic: hide decorative cards, show only gate */
+          .mosaic-grid { display: flex !important; flex-direction: column; }
+          .mosaic-card { display: none; }
+          .gate-cell { padding: 0 !important; }
+          .gate-card { padding: 32px 24px; }
+          .gate-title { font-size: 18px; }
+        }
+
         /* Light mode overrides */
         [data-theme="light"] .mosaic-card {
           background: #fdf8f2; border-color: rgba(0,0,0,0.08);
@@ -444,7 +465,7 @@ export default function Feed() {
                 </div>}
 
                 {/* Gate card — dead center */}
-                <div style={{ gridColumn: '2 / 4', gridRow: '2 / 4', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px' }}>
+                <div className="gate-cell" style={{ gridColumn: '2 / 4', gridRow: '2 / 4', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px' }}>
                   <div className="gate-card">
                     <div className="gate-icon">
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round">
