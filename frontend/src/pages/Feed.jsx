@@ -161,11 +161,128 @@ export default function Feed() {
           grid-template-columns: repeat(3, 1fr);
           gap: 18px;
         }
-        @media (max-width: 900px) {
-          .feed-grid { grid-template-columns: repeat(2, 1fr); }
+        @media (max-width: 900px) { .feed-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 560px) { .feed-grid { grid-template-columns: 1fr; } }
+
+        /* Guest gate — title mosaic */
+        .gate-wrap {
+          max-width: 1200px; margin: 0 auto;
+          position: relative;
         }
-        @media (max-width: 560px) {
-          .feed-grid { grid-template-columns: 1fr; }
+        .mosaic-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          grid-auto-rows: 140px;
+          gap: 12px;
+        }
+        @media (max-width: 900px) { .mosaic-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 560px) { .mosaic-grid { grid-template-columns: 1fr; } }
+
+        .mosaic-card {
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: 14px; padding: 20px;
+          display: flex; flex-direction: column; justify-content: space-between;
+          overflow: hidden; position: relative;
+          transition: border-color 0.2s;
+        }
+        .mosaic-card:hover { border-color: rgba(13,148,136,0.3); }
+
+        .mosaic-tag {
+          font-size: 10px; font-weight: 600; letter-spacing: 1px;
+          text-transform: uppercase; color: #5eead4;
+          margin-bottom: 8px;
+        }
+        .mosaic-title {
+          font-size: 15px; font-weight: 700; color: #fff;
+          line-height: 1.35; letter-spacing: -0.2px;
+          display: -webkit-box; -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical; overflow: hidden;
+          flex: 1;
+        }
+        .mosaic-author {
+          font-size: 11px; color: rgba(255,255,255,0.3);
+          margin-top: 12px; white-space: nowrap;
+          overflow: hidden; text-overflow: ellipsis;
+        }
+        .mosaic-deco {
+          position: absolute; bottom: -20px; right: -20px;
+          width: 80px; height: 80px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(13,148,136,0.12) 0%, transparent 70%);
+          pointer-events: none;
+        }
+
+        /* Center gate card */
+        .gate-card {
+          background: rgba(8,8,8,0.85);
+          border: 1px solid rgba(13,148,136,0.4);
+          border-radius: 20px; padding: 40px 44px;
+          text-align: center; width: 100%;
+          backdrop-filter: blur(24px);
+          box-shadow: 0 0 60px rgba(13,148,136,0.12);
+        }
+        .gate-icon {
+          width: 52px; height: 52px; border-radius: 14px;
+          background: linear-gradient(135deg, #0d9488, #14b8a6);
+          display: flex; align-items: center; justify-content: center;
+          margin: 0 auto 18px;
+          box-shadow: 0 4px 20px rgba(13,148,136,0.45);
+        }
+        .gate-title {
+          font-size: 20px; font-weight: 800; color: #fff;
+          letter-spacing: -0.4px; margin-bottom: 8px;
+        }
+        .gate-sub {
+          font-size: 13px; color: rgba(255,255,255,0.45);
+          line-height: 1.6; margin-bottom: 24px;
+        }
+        .gate-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+        .gate-btn-primary {
+          background: #0d9488; color: #fff; border: none;
+          cursor: pointer; font-family: inherit;
+          font-size: 13.5px; font-weight: 700;
+          padding: 11px 24px; border-radius: 10px;
+          text-decoration: none;
+          transition: opacity 0.15s, transform 0.1s;
+          box-shadow: 0 4px 14px rgba(13,148,136,0.4);
+        }
+        .gate-btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+        /* Dark mode — ghost glow button */
+        .gate-btn-secondary {
+          background: transparent;
+          border: 1.5px solid rgba(255,255,255,0.35);
+          color: #fff; cursor: pointer; font-family: inherit;
+          font-size: 13.5px; font-weight: 600;
+          padding: 11px 24px; border-radius: 10px;
+          text-decoration: none;
+          box-shadow: 0 0 12px rgba(255,255,255,0.06), inset 0 0 12px rgba(255,255,255,0.04);
+          transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .gate-btn-secondary:hover {
+          border-color: rgba(255,255,255,0.7);
+          box-shadow: 0 0 18px rgba(255,255,255,0.12), inset 0 0 18px rgba(255,255,255,0.06);
+        }
+
+        /* Light mode overrides */
+        [data-theme="light"] .mosaic-card {
+          background: #fdf8f2; border-color: rgba(0,0,0,0.08);
+        }
+        [data-theme="light"] .mosaic-title { color: #0a0a0a; }
+        [data-theme="light"] .mosaic-author { color: rgba(0,0,0,0.35); }
+        [data-theme="light"] .gate-card {
+          background: rgba(245,237,224,0.95);
+          border-color: rgba(13,148,136,0.35);
+        }
+        [data-theme="light"] .gate-title { color: #0a0a0a; }
+        [data-theme="light"] .gate-sub { color: rgba(0,0,0,0.5); }
+        /* Light mode — solid black button */
+        [data-theme="light"] .gate-btn-secondary {
+          background: #0a0a0a; border-color: #0a0a0a;
+          color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+        }
+        [data-theme="light"] .gate-btn-secondary:hover {
+          background: #222; border-color: #222;
+          box-shadow: 0 6px 20px rgba(0,0,0,0.28);
         }
       `}</style>
 
@@ -216,14 +333,14 @@ export default function Feed() {
             <>
               <Link to="/posts/new" className="hero-btn-primary">
                 <svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                 </svg>
                 Start Writing
               </Link>
               <a href="#feed" className="hero-btn-secondary">
                 Browse Posts
                 <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M5 10h10M10 5l5 5-5 5"/>
+                  <path d="M5 10h10M10 5l5 5-5 5" />
                 </svg>
               </a>
             </>
@@ -232,7 +349,7 @@ export default function Feed() {
               <Link to="/register" className="hero-btn-primary">
                 Get started — it's free
                 <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M5 10h10M10 5l5 5-5 5"/>
+                  <path d="M5 10h10M10 5l5 5-5 5" />
                 </svg>
               </Link>
               <a href="#feed" className="hero-btn-secondary">Explore posts</a>
@@ -259,45 +376,111 @@ export default function Feed() {
 
         <div className="hero-scroll">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M12 5v14M5 12l7 7 7-7"/>
+            <path d="M12 5v14M5 12l7 7 7-7" />
           </svg>
           Scroll
         </div>
       </section>
 
-      {/* FEED */}
+      {/* FEED — logged in users only */}
       <section className="feed-section" id="feed">
-        <div className="feed-header">
-          <h2 className="feed-title">Latest Posts</h2>
-          {!loading && <span className="feed-count">{posts.length} posts</span>}
-        </div>
-
-        {loading && <div style={{ maxWidth: '1200px', margin: '0 auto' }}><LoadingSpinner /></div>}
-        {error && <div style={{ maxWidth: '1200px', margin: '0 auto' }}><div className="alert alert-error">{error}</div></div>}
-
-        {!loading && !error && posts.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '80px 0', color: 'rgba(255,255,255,0.22)' }}>
-            <div style={{
-              width: '56px', height: '56px', margin: '0 auto 18px',
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.07)',
-              borderRadius: '14px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center'
-            }}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="1.8" strokeLinecap="round">
-                <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
-              </svg>
+        {user ? (
+          <>
+            <div className="feed-header">
+              <h2 className="feed-title">Latest Posts</h2>
+              {!loading && <span className="feed-count">{posts.length} posts</span>}
             </div>
-            <p style={{ fontSize: '15px' }}>No posts yet. Be the first to write one!</p>
-          </div>
-        )}
 
-        {!loading && !error && posts.length > 0 && (
-          <div className="feed-grid">
-            {posts.map((post, i) => (
-              <PostCard key={post.id} post={post} onDelete={handleDelete} featured={i === 0} />
-            ))}
-          </div>
+            {loading && <div style={{ maxWidth: '1200px', margin: '0 auto' }}><LoadingSpinner /></div>}
+            {error && <div style={{ maxWidth: '1200px', margin: '0 auto' }}><div className="alert alert-error">{error}</div></div>}
+
+            {!loading && !error && posts.length === 0 && (
+              <div style={{ textAlign: 'center', padding: '80px 0', color: 'rgba(255,255,255,0.22)' }}>
+                <p style={{ fontSize: '15px' }}>No posts yet. Be the first to write one!</p>
+              </div>
+            )}
+
+            {!loading && !error && posts.length > 0 && (
+              <div className="feed-grid">
+                {posts.map((post, i) => (
+                  <PostCard key={post.id} post={post} onDelete={handleDelete} featured={i === 0} />
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          /* Guest gate — title mosaic */
+          <>
+            <div className="feed-header">
+              <h2 className="feed-title">Latest Posts</h2>
+            </div>
+            <div className="gate-wrap">
+              <div className="mosaic-grid">
+
+                {/* Row 1: wide | normal | normal */}
+                {posts[0] && <div className="mosaic-card" style={{ gridColumn: '1 / 3', gridRow: '1' }}>
+                  <div>
+                    <div className="mosaic-tag">Featured</div>
+                    <div className="mosaic-title" style={{ fontSize: '20px' }}>{posts[0].title}</div>
+                  </div>
+                  <div className="mosaic-author">{posts[0].author_name}</div>
+                  <div className="mosaic-deco" />
+                </div>}
+
+                {posts[1] && <div className="mosaic-card" style={{ gridColumn: '3', gridRow: '1' }}>
+                  <div><div className="mosaic-title">{posts[1].title}</div></div>
+                  <div className="mosaic-author">{posts[1].author_name}</div>
+                </div>}
+
+                {posts[2] && <div className="mosaic-card" style={{ gridColumn: '4', gridRow: '1' }}>
+                  <div><div className="mosaic-title">{posts[2].title}</div></div>
+                  <div className="mosaic-author">{posts[2].author_name}</div>
+                </div>}
+
+                {/* Row 2: normal | GATE (spans col 2-3, row 2-3) | normal */}
+                {posts[3] && <div className="mosaic-card" style={{ gridColumn: '1', gridRow: '2' }}>
+                  <div><div className="mosaic-title">{posts[3].title}</div></div>
+                  <div className="mosaic-author">{posts[3].author_name}</div>
+                </div>}
+
+                {/* Gate card — dead center */}
+                <div style={{ gridColumn: '2 / 4', gridRow: '2 / 4', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px' }}>
+                  <div className="gate-card">
+                    <div className="gate-icon">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round">
+                        <path d="M15 3H9a5 5 0 000 10h3v8"/>
+                        <path d="M15 3a5 5 0 010 10"/>
+                        <line x1="18" y1="3" x2="18" y2="21"/>
+                      </svg>
+                    </div>
+                    <h2 className="gate-title">One account.<br/>All the stories.</h2>
+                    <p className="gate-sub">Join free to read every post, like, comment, and share your own writing.</p>
+                    <div className="gate-btns">
+                      <Link to="/register" className="gate-btn-primary">Join for free</Link>
+                      <Link to="/login" className="gate-btn-secondary">Log in</Link>
+                    </div>
+                  </div>
+                </div>
+
+                {posts[4] && <div className="mosaic-card" style={{ gridColumn: '4', gridRow: '2' }}>
+                  <div><div className="mosaic-title">{posts[4].title}</div></div>
+                  <div className="mosaic-author">{posts[4].author_name}</div>
+                </div>}
+
+                {/* Row 3: normal | (gate continues) | normal */}
+                {posts[5] && <div className="mosaic-card" style={{ gridColumn: '1', gridRow: '3' }}>
+                  <div><div className="mosaic-title">{posts[5].title}</div></div>
+                  <div className="mosaic-author">{posts[5].author_name}</div>
+                </div>}
+
+                {posts[6] && <div className="mosaic-card" style={{ gridColumn: '4', gridRow: '3' }}>
+                  <div><div className="mosaic-title">{posts[6].title}</div></div>
+                  <div className="mosaic-author">{posts[6].author_name}</div>
+                </div>}
+
+              </div>
+            </div>
+          </>
         )}
       </section>
     </>

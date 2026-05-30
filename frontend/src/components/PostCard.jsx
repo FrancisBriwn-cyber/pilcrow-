@@ -40,7 +40,7 @@ export default function PostCard({ post, onDelete, featured = false }) {
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 18px; overflow: hidden;
             display: grid; grid-template-columns: 1fr 420px;
-            min-height: 300px;
+            min-height: 420px;
             transition: border-color 0.2s, transform 0.2s;
             grid-column: 1 / -1;
           }
@@ -94,9 +94,11 @@ export default function PostCard({ post, onDelete, featured = false }) {
           .pc-feat-read:hover { opacity: 0.85; transform: translateY(-1px); }
           .pc-feat-image {
             position: relative; overflow: hidden;
+            min-height: 420px;
           }
           .pc-feat-image img {
             width: 100%; height: 100%; object-fit: cover;
+            object-position: center 60%;
             transition: transform 0.4s ease;
           }
           .pc-feat:hover .pc-feat-image img { transform: scale(1.04); }
@@ -182,6 +184,7 @@ export default function PostCard({ post, onDelete, featured = false }) {
         }
         .pc-cover img {
           width: 100%; height: 100%; object-fit: cover;
+          object-position: center bottom;
           transition: transform 0.4s ease;
         }
         .pc:hover .pc-cover img { transform: scale(1.06); }
