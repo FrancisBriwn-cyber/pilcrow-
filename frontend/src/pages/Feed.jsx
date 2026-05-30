@@ -446,130 +446,74 @@ export default function Feed() {
         </div>
       </section>
 
-      {/* FEED — logged in users only */}
+      {/* FEED — visible to everyone */}
       <section className="feed-section" id="feed">
-        {user ? (
-          <>
-            <div className="feed-header">
-              <h2 className="feed-title">Latest Posts</h2>
-              {!loading && <span className="feed-count">{posts.length} posts</span>}
-            </div>
+        <div className="feed-header">
+          <h2 className="feed-title">Latest Posts</h2>
+          {!loading && posts.length > 0 && <span className="feed-count">{posts.length} posts</span>}
+        </div>
 
-            {loading && <div style={{ maxWidth: '1200px', margin: '0 auto' }}><LoadingSpinner /></div>}
-            {error && <div style={{ maxWidth: '1200px', margin: '0 auto' }}><div className="alert alert-error">{error}</div></div>}
+        {loading && <div style={{ maxWidth: '1200px', margin: '0 auto' }}><LoadingSpinner /></div>}
+        {error && <div style={{ maxWidth: '1200px', margin: '0 auto' }}><div className="alert alert-error">{error}</div></div>}
 
-            {!loading && !error && posts.length === 0 && (
-              <div style={{ textAlign: 'center', padding: '80px 0', color: 'rgba(255,255,255,0.22)' }}>
-                <p style={{ fontSize: '15px' }}>No posts yet. Be the first to write one!</p>
-              </div>
+        {!loading && !error && posts.length === 0 && (
+          <div style={{ textAlign: 'center', padding: '80px 0', color: 'rgba(255,255,255,0.22)' }}>
+            <p style={{ fontSize: '15px' }}>No posts yet. Be the first to write one!</p>
+          </div>
+        )}
+
+        {!loading && !error && posts.length > 0 && (
+          <div className="mag-grid">
+            {posts[0] && (
+              <Link to={`/posts/${posts[0].id}`} className="mag-card mag-card-featured">
+                <div>
+                  <div className="mag-tag">Featured</div>
+                  <div className="mag-title-lg">{posts[0].title}</div>
+                </div>
+                <div className="mag-author">{posts[0].author_name}</div>
+                <div className="mag-deco" />
+              </Link>
             )}
-
-            {!loading && !error && posts.length > 0 && (
-              <div className="mag-grid">
-                {posts[0] && (
-                  <Link to={`/posts/${posts[0].id}`} className="mag-card mag-card-featured">
-                    <div>
-                      <div className="mag-tag">Featured</div>
-                      <div className="mag-title-lg">{posts[0].title}</div>
-                    </div>
-                    <div className="mag-author">{posts[0].author_name}</div>
-                    <div className="mag-deco" />
-                  </Link>
-                )}
-                {posts[1] && (
-                  <Link to={`/posts/${posts[1].id}`} className="mag-card">
-                    <div><div className="mag-title">{posts[1].title}</div></div>
-                    <div className="mag-author">{posts[1].author_name}</div>
-                  </Link>
-                )}
-                {posts[2] && (
-                  <Link to={`/posts/${posts[2].id}`} className="mag-card">
-                    <div><div className="mag-title">{posts[2].title}</div></div>
-                    <div className="mag-author">{posts[2].author_name}</div>
-                  </Link>
-                )}
-                {posts.slice(3).map(post => (
-                  <Link key={post.id} to={`/posts/${post.id}`} className="mag-card">
-                    <div><div className="mag-title">{post.title}</div></div>
-                    <div className="mag-author">{post.author_name}</div>
-                  </Link>
-                ))}
-              </div>
+            {posts[1] && (
+              <Link to={`/posts/${posts[1].id}`} className="mag-card">
+                <div><div className="mag-title">{posts[1].title}</div></div>
+                <div className="mag-author">{posts[1].author_name}</div>
+              </Link>
             )}
-          </>
-        ) : (
-          /* Guest gate — title mosaic */
-          <>
-            <div className="feed-header">
-              <h2 className="feed-title">Latest Posts</h2>
-            </div>
-            <div className="gate-wrap">
-              <div className="mosaic-grid">
+            {posts[2] && (
+              <Link to={`/posts/${posts[2].id}`} className="mag-card">
+                <div><div className="mag-title">{posts[2].title}</div></div>
+                <div className="mag-author">{posts[2].author_name}</div>
+              </Link>
+            )}
+            {posts.slice(3).map(post => (
+              <Link key={post.id} to={`/posts/${post.id}`} className="mag-card">
+                <div><div className="mag-title">{post.title}</div></div>
+                <div className="mag-author">{post.author_name}</div>
+              </Link>
+            ))}
 
-                {/* Row 1: wide | normal | normal */}
-                {posts[0] && <div className="mosaic-card" style={{ gridColumn: '1 / 3', gridRow: '1' }}>
-                  <div>
-                    <div className="mosaic-tag">Featured</div>
-                    <div className="mosaic-title" style={{ fontSize: '20px' }}>{posts[0].title}</div>
+            {/* Guest CTA — appears at end of grid for logged-out users */}
+            {!user && (
+              <div className="gate-cell" style={{ gridColumn: '1 / -1', padding: '4px 0 0' }}>
+                <div className="gate-card" style={{ maxWidth: '480px', margin: '0 auto' }}>
+                  <div className="gate-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round">
+                      <path d="M15 3H9a5 5 0 000 10h3v8"/>
+                      <path d="M15 3a5 5 0 010 10"/>
+                      <line x1="18" y1="3" x2="18" y2="21"/>
+                    </svg>
                   </div>
-                  <div className="mosaic-author">{posts[0].author_name}</div>
-                  <div className="mosaic-deco" />
-                </div>}
-
-                {posts[1] && <div className="mosaic-card" style={{ gridColumn: '3', gridRow: '1' }}>
-                  <div><div className="mosaic-title">{posts[1].title}</div></div>
-                  <div className="mosaic-author">{posts[1].author_name}</div>
-                </div>}
-
-                {posts[2] && <div className="mosaic-card" style={{ gridColumn: '4', gridRow: '1' }}>
-                  <div><div className="mosaic-title">{posts[2].title}</div></div>
-                  <div className="mosaic-author">{posts[2].author_name}</div>
-                </div>}
-
-                {/* Row 2: normal | GATE (spans col 2-3, row 2-3) | normal */}
-                {posts[3] && <div className="mosaic-card" style={{ gridColumn: '1', gridRow: '2' }}>
-                  <div><div className="mosaic-title">{posts[3].title}</div></div>
-                  <div className="mosaic-author">{posts[3].author_name}</div>
-                </div>}
-
-                {/* Gate card — dead center */}
-                <div className="gate-cell" style={{ gridColumn: '2 / 4', gridRow: '2 / 4', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px' }}>
-                  <div className="gate-card">
-                    <div className="gate-icon">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round">
-                        <path d="M15 3H9a5 5 0 000 10h3v8"/>
-                        <path d="M15 3a5 5 0 010 10"/>
-                        <line x1="18" y1="3" x2="18" y2="21"/>
-                      </svg>
-                    </div>
-                    <h2 className="gate-title">One account.<br/>All the stories.</h2>
-                    <p className="gate-sub">Join free to read every post, like, comment, and share your own writing.</p>
-                    <div className="gate-btns">
-                      <Link to="/register" className="gate-btn-primary">Join for free</Link>
-                      <Link to="/login" className="gate-btn-secondary">Log in</Link>
-                    </div>
+                  <h2 className="gate-title">One account.<br/>All the stories.</h2>
+                  <p className="gate-sub">Join free to like, comment, and share your own writing.</p>
+                  <div className="gate-btns">
+                    <Link to="/register" className="gate-btn-primary">Join for free</Link>
+                    <Link to="/login" className="gate-btn-secondary">Log in</Link>
                   </div>
                 </div>
-
-                {posts[4] && <div className="mosaic-card" style={{ gridColumn: '4', gridRow: '2' }}>
-                  <div><div className="mosaic-title">{posts[4].title}</div></div>
-                  <div className="mosaic-author">{posts[4].author_name}</div>
-                </div>}
-
-                {/* Row 3: normal | (gate continues) | normal */}
-                {posts[5] && <div className="mosaic-card" style={{ gridColumn: '1', gridRow: '3' }}>
-                  <div><div className="mosaic-title">{posts[5].title}</div></div>
-                  <div className="mosaic-author">{posts[5].author_name}</div>
-                </div>}
-
-                {posts[6] && <div className="mosaic-card" style={{ gridColumn: '4', gridRow: '3' }}>
-                  <div><div className="mosaic-title">{posts[6].title}</div></div>
-                  <div className="mosaic-author">{posts[6].author_name}</div>
-                </div>}
-
               </div>
-            </div>
-          </>
+            )}
+          </div>
         )}
       </section>
     </>
