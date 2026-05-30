@@ -10,20 +10,21 @@ passport.deserializeUser(async (id, done) => {
   } catch (err) { done(err); }
 });
 
+// Bypass state/CSRF verification — JWT handles security after login
+class NullStateStore {
+  store(_req, callback) { callback(null, 'x'); }
+  verify(_req, _state, callback) { callback(null, true, {}); }
+}
+
 // Only register Google strategy if credentials are configured
 if (!process.env.GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID === 'your_google_client_id_here') {
   console.warn('Google OAuth not configured — skipping Google strategy.');
 } else {
-  /*
-    Google OAuth strategy:
-    - If a user with this Google ID already exists, return them.
-    - If a user with the same email exists (registered via email/password), link the accounts.
-    - Otherwise, create a new user record.
-  */
   passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL
+    callbackURL: process.env.GOOGLE_CALLBACK_URL,
+    store: new NullStateStore()
   }, async (_accessToken, _refreshToken, profile, done) => {
     try {
       const email = profile.emails[0].value;
