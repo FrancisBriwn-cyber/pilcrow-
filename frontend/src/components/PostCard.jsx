@@ -3,7 +3,12 @@ import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 
 function readTime(text = '') {
-  return Math.max(1, Math.ceil(text.split(/\s+/).length / 200));
+  const plain = text.replace(/<[^>]*>/g, ' ');
+  return Math.max(1, Math.ceil(plain.split(/\s+/).length / 200));
+}
+
+function stripHtml(html = '') {
+  return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
 function formatDate(iso) {
@@ -126,7 +131,7 @@ export default function PostCard({ post, onDelete, featured = false }) {
                 <h2 className="pc-feat-title">{post.title}</h2>
               </Link>
               <p className="pc-feat-excerpt">
-                {post.content.length > 240 ? post.content.slice(0, 240) + '…' : post.content}
+                {(() => { const t = stripHtml(post.content); return t.length > 240 ? t.slice(0, 240) + '…' : t; })()}
               </p>
             </div>
             <div className="pc-feat-footer">
@@ -255,7 +260,7 @@ export default function PostCard({ post, onDelete, featured = false }) {
             <h2 className="pc-title">{post.title}</h2>
           </Link>
           <p className="pc-excerpt">
-            {post.content.length > 200 ? post.content.slice(0, 200) + '…' : post.content}
+            {(() => { const t = stripHtml(post.content); return t.length > 200 ? t.slice(0, 200) + '…' : t; })()}
           </p>
         </div>
 
