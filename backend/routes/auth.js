@@ -26,11 +26,14 @@ router.get('/google/callback', async (req, res) => {
 
   try {
     // Step 1: Exchange code for access token
+    const callbackUrl = process.env.GOOGLE_CALLBACK_URL || 'https://pilcrow.onrender.com/api/auth/google/callback';
+    console.log('[OAuth] Using redirect_uri:', callbackUrl);
+
     const tokenData = await post('https://oauth2.googleapis.com/token', {
       code,
       client_id: process.env.GOOGLE_CLIENT_ID,
       client_secret: process.env.GOOGLE_CLIENT_SECRET,
-      redirect_uri: process.env.GOOGLE_CALLBACK_URL,
+      redirect_uri: callbackUrl,
       grant_type: 'authorization_code',
     });
 
