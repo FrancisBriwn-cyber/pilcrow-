@@ -1,4 +1,5 @@
 
+
 require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
 const express = require('express');
 const cors = require('cors');
@@ -12,6 +13,27 @@ const { generalLimiter } = require('./middleware/rateLimiter');
 
 // Load Passport Google strategy
 require('./middleware/passport');
+
+// Auto-migrate on startup — safe to run on every deploy (IF NOT EXISTS)
+const pool = require('./db');
+(async () => {
+  try {
+    await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS bio TEXT`);
+    await pool.query(`ALTER TABLE posts ADD COLUMN IF NOT EXISTS category VARCHAR(60) DEFAULT 'General'`);
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS follows (
+        id           SERIAL PRIMARY KEY,
+        follower_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        following_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        created_at   TIMESTAMP DEFAULT NOW(),
+        UNIQUE(follower_id, following_id)
+      )
+    `);
+    console.log('Auto-migration complete.');
+  } catch (err) {
+    console.error('Auto-migration error:', err.message);
+  }
+})();
 
 const app = express();
 
