@@ -161,7 +161,7 @@ export default function Feed() {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
           grid-auto-rows: 160px;
-          gap: 12px;
+          gap: 18px;
         }
         @media (max-width: 900px) { .mag-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 140px; } }
         @media (max-width: 640px) { .mag-grid { grid-template-columns: 1fr; grid-auto-rows: auto; } }
@@ -221,7 +221,7 @@ export default function Feed() {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
           grid-auto-rows: 140px;
-          gap: 12px;
+          gap: 18px;
         }
         @media (max-width: 900px) { .mosaic-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 560px) { .mosaic-grid { grid-template-columns: 1fr; } }
